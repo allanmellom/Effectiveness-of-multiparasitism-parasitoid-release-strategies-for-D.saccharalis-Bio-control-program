@@ -5,24 +5,24 @@ import os
 random=SystemRandom()
 ######
 #P - Q - N - H or Q - H
-#P- parasitoide especialista
-#Q- parasitoide generalista
-#N- host atacado pelo P e pelo Q
-#H- host atacado pelo Q
+#P- specialist parasitoid 
+#Q- generalist parasitoid
+#N- host of both parasitoid
+#H- host of Q
 ######
-#a1 - eficiencia de busca do P pro N
-#a2 - eficiencia de busca do Q pro N
-#a3 - eficiencia de busca do Q pro H
-#lambda1 - taxa de crescimento populacionao de N
-#lambda2 - taxa de crescimento populacionao de H
-#H0=é o numero de hosts que precisa ter para impedir das femeas de parasitoide se dispersarem ([PQ]) #to-do: esse valor precisa ter mais 1 pq pode ser diferente para o Q predando outro host?
-#h0=é a tolerancia a outros hosts ([NH])
-#f0=é a tolerancia a outros parasitoides femeas.([PQ]) #to-do: esse valor precisa ter mais 1 pq pode ser diferente para o Q predando outro host?
-#taxa_disp -> lista com a taxa de dispersão de cada pop (PQNH)
-#fracao_indv_migrante -> taxa de dispersão máxima que pode sair de cada população (PQNH/ 0Q0H)
-#tempo_final -> qual vai ser a ultima geracao
-#lin -> numero de linhas
-#col -> numero de colunas
+#a1 - search efficiency of N by P (P -> N)
+#a2 - search efficiency of N by Q (Q -> N)
+#a3 - search efficiency of H by Q (Q -> H)
+#lambda1 - population growth rate of N
+#lambda2 - population growth rate of H
+#H0=number of hosts needed to prevent female parasitoid to leave the patch ([PQ])
+#h0=tolerance of others host ([NH])
+#f0=tolerance of others female parasitoid ([PQ]) 
+#taxa_disp -> dispersion rate of each population (PQNH)
+#fracao_indv_migrante -> max dispersion rate of each population (PQNH/ 0Q0H)
+#tempo_final -> last generation to simulate
+#lin -> number of row
+#col -> number of col
 #pop_iniciais -> uma lista contendo as pop iniciais de cada ponto q tem pop inicial [[P,Q,N,H],[P,Q,N,H]], sendo q
 	#pop_iniciais[0] vai ser estar no patch_iniciais[0]
 #patch_iniciais -> uma lista contendo os patchs que ira iniciar com alguma pop [[l,c],[l,c]]

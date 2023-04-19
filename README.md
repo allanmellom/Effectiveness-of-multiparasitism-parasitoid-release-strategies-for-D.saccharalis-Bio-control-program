@@ -1,2 +1,5 @@
-# Effectiveness-of-multiparasitism-parasitoid-release-strategies-for-D.saccharalis-Bio-control-program
+Effectiveness of multiparasitism and parasitoid release strategies for Sugcarcane Borer, Diatraea saccharalis (Lepidoptera: Crambidae) (Fabricius), Biological control programs
+
+
+
 Description
