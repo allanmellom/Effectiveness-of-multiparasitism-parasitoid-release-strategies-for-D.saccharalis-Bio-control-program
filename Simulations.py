@@ -27,15 +27,15 @@ random=SystemRandom()
 	#pop_iniciais[0] vai ser estar no patch_iniciais[0]
 #patch_iniciais -> uma lista contendo os patchs que ira iniciar com alguma pop [[l,c],[l,c]]
 #viz-> é a lista dos vizinhos e distancias criada com a funcao criando_lista_viz(). É a primeira lista criada pela funcao citada.
-#lista_raios-> é a lista de raios q tem no grid escolhido, é a segunda lista craida pela funcao criando_lista_viz
+#lista_raios-> list of radios in the choosen grid. It is the second list created by the function criando_lista_viz()
 #TS= "total available searching time" ([P,Q1,Q2])
 #TH = handling time ([P,Q1,Q2]) (tem dois Q pois o Q pega 2 host, então pode ter tempo de manuseio diferente para ambos. O q1 é para o host compartilhado e o Q2 para o host exclusivo do generalista.)
-#porcentagem_popinihost= a porcemtagem de patches q cada host vai ocupar no inicio. ([N,H])
-#inicial_h = quanto é a pop inicial do H (3)
-#inicial_n = quanto é ap op inicialdo N (2)
-#Pnumerico = media de qnts cotesia adultos emergem de uma única pulpa de diatraea
-#Q1numerico = media de qnts tetrastichus adultos emergem de uma única pulpa de diatraea
-#Q2numerico = media de qnts tetrastichus adultos emergem de uma única pulpa de HOST ALTERNATIVO
+#porcentagem_popinihost= percentage of how many patches each host occupy at the start of simulations ([N,H])
+#inicial_h = initial population of H (3)
+#inicial_n = initial population of N (2)
+#Pnumerico = how many adult especialist parasitoid emerge from a single main host
+#Q1numerico = how many adult generalist parasitoid emerge from a single main host
+#Q2numerico = how many adult generalist parasitoid emerge from a single alternative host
 
 
 
