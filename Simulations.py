@@ -41,18 +41,18 @@ random=SystemRandom() #generate random numbers from sources provided by the oper
 
 def modelo_paisagem_migracao(a1,a2,a3,lambda1,lambda2,H0,h0,f0,taxa_disp,fracao_indv_migrante,tempo_final,lin,col,pop_iniciais,patch_iniciais,viz,lista_raios,TS,TH,zzzz,patches_sorteados,bOUm,solt_posi,solt_valor,hec10_bordas,para_lista_inicial,borda_meio,loop,Pnumerico,Q1numerico,Q2numerico):
 	qnd_onde_liberou=[]
-	ocupacao_total=[[],[],[],[]] #criando a matriz de ocupacao ocupacao_total[pop][t]
+	ocupacao_total=[[],[],[],[]] #creating vector of ocupation ocupacao_total[pop][t]
 	ocupacao_total_tempo=[0,0,0,0] #ocupacao_total_tempo[pop]
 
-	media_regional=[[],[],[],[]] #criando a lista que vai acomodar a media regional media_regional[populacao][t]
-	media_regional_tempo=[0,0,0,0] #criando a lista que vai acomodar a media regional media_regional[populacao][t]
+	media_regional=[[],[],[],[]] #creating the list that will accommodate the regional mean media_regional[populacao][t]
+	media_regional_tempo=[0,0,0,0] #creating the temporary list that will accomodate the regional mean regional media_regional[populacao][t]
 
-	grid=lin*col #criando o valor de grid para poder fazer a media regional
+	grid=lin*col #creating the grid value to be able to do the regional mean
 
 	pop_migrante_tempo=[0,0,0,0]
 	media_regional_migracao=[[0],[0],[0],[0]]
 
-	#criando os vetores dos dados
+	#creating vectors of data
 	vetores=criador_vetor(lin,col,tempo_final)
 	g_all=vetores[0]
 	pop_migrante=vetores[1]
@@ -61,7 +61,7 @@ def modelo_paisagem_migracao(a1,a2,a3,lambda1,lambda2,H0,h0,f0,taxa_disp,fracao_
 	emigracao_patchs=vetores[4]
 
 	###########
-	#INICIO DINAMICA POPULACIONAL
+	#START OF THE POPULATIONAL DYNAMICS
 	###########
 
 	for t in range(tempo_final):
@@ -71,12 +71,12 @@ def modelo_paisagem_migracao(a1,a2,a3,lambda1,lambda2,H0,h0,f0,taxa_disp,fracao_
 				if t>0:
 					tempo_dinamica=dinamica_iterativa(g_all,pop_iniciais,ocupacao_total_tempo,media_regional_tempo,pop_migrante,c,l,t,a1,a2,a3,lambda1,lambda2,TS,TH,H0,h0,f0,ocupacao_total,Pnumerico,Q1numerico,Q2numerico)
 					#############
-					#migração
+					#migration
 					#############
-					tempo2=criando_popmigrante_densidade_patch(l,c,t,H0,h0,f0,fracao_indv_migrante,g_all,pop_migrante,emigracao_patchs)#criei a pop migrante do tempo
+					tempo2=criando_popmigrante_densidade_patch(l,c,t,H0,h0,f0,fracao_indv_migrante,g_all,pop_migrante,emigracao_patchs)#created the vector with the migrant population from the current generation
 					pop_migrante=tempo2[0]
 					emigracao_patchs=tempo2[1]
-					for i,j in enumerate(pop_migrante[l][c]): #estou diminuindo a pop do patch pela pop q vai migrar
+					for i,j in enumerate(pop_migrante[l][c]): #subtracting patch population by the migrant population
 						g_all[l][c][i][t]-=j[t]
 				else:
 					tempo_dinamica=dinamica_tempo0(g_all,pop_iniciais,ocupacao_total_tempo,media_regional_tempo,pop_migrante,c,l,t,patch_iniciais)
@@ -86,9 +86,9 @@ def modelo_paisagem_migracao(a1,a2,a3,lambda1,lambda2,H0,h0,f0,taxa_disp,fracao_
 				media_regional_tempo=tempo_dinamica[3]
 				pop_migrante=tempo_dinamica[4]
 
-		#saiu do loop pela matriz, agora, no mesmo tempo, vem o segundo loop pela matriz para poder migrar:
-		if t!=0: #isso eh para nao ter migracao no tempo zero
-			#loop de lin e col
+		#exited the space vector loop, now enters the second loop in the space vector so the population can migrate:
+		if t!=0: #there is no migration on generation zero
+			#row and column  loop
 			for l in range(lin):
 				for c in range(col):
 					tempo=sorteio_vizinhos(g_all,pop_migrante,taxa_disp,viz,l,c,t,visitacao_patchs,imigracao_patchs,lista_distancia)
@@ -96,14 +96,14 @@ def modelo_paisagem_migracao(a1,a2,a3,lambda1,lambda2,H0,h0,f0,taxa_disp,fracao_
 					visitacao_patchs=tempo[1]
 					imigracao_patchs=tempo[2]
 					pop_migrante_tempo=[0,0,0,0]
-					for i,j in enumerate(pop_migrante[l][c]): #i é posição, j elemento
+					for i,j in enumerate(pop_migrante[l][c]): 
 						pop_migrante_tempo[i]+=pop_migrante[l][c][i][t]
 
-			for i,j in enumerate(pop_migrante[l][c]): #pondo a media regional
+			for i,j in enumerate(pop_migrante[l][c]): #inserting regional mean
 				media_regional_migracao[i].append(pop_migrante_tempo[i]/grid)
 
-		###Bloco de checar se as pop possuem recurso
-		if t!=0: #para soh acontecer dps do tempo 0
+		###Portion to check if each population has resource
+		if t!=0: #there is no check on generation zero
 			for l in range(lin):
 				for c in range(col):
 					g_all=conferir_recurso_parasitoides(g_all,l,c,t)
@@ -112,7 +112,7 @@ def modelo_paisagem_migracao(a1,a2,a3,lambda1,lambda2,H0,h0,f0,taxa_disp,fracao_
 
 		
 		
-		if t!=0: #aqui atualiza a media regional e ocupacao
+		if t!=0: #Portion to update regional mean and ocupation
 			for l in range(lin):
 				for c in range(col):
 					if g_all[l][c][0][t]>0:
@@ -143,7 +143,7 @@ def modelo_paisagem_migracao(a1,a2,a3,lambda1,lambda2,H0,h0,f0,taxa_disp,fracao_
 		media_regional_tempo=[0,0,0,0]
 		ocupacao_total_tempo=[0,0,0,0]
 		
-	salva_arquivos(zzzz,g_all,pop_migrante,ocupacao_total,media_regional,media_regional_migracao,visitacao_patchs,imigracao_patchs,emigracao_patchs,a1,a2,a3,lambda1,lambda2,taxa_disp,fracao_indv_migrante,tempo_final,lin,col,qnd_onde_liberou)
+	salva_arquivos(zzzz,g_all,pop_migrante,ocupacao_total,media_regional,media_regional_migracao,visitacao_patchs,imigracao_patchs,emigracao_patchs,a1,a2,a3,lambda1,lambda2,taxa_disp,fracao_indv_migrante,tempo_final,lin,col,qnd_onde_liberou) #now salving data on files
 	return
 def criando_lista_patches_cada_hectare():
 	lin=50
@@ -259,7 +259,7 @@ def criando_lista_distancia(lin,col,distancia_maxima):
 				distancia=(((0-l)**2)+((0-c)**2))**(1/2)
 				if distancia<=distancia_maxima:
 					lista_distancia.append(distancia)
-	lista_distancia=sorted(set(lista_distancia)) #qnd o loop termina, eu retiro os valores repetidos e ordeno a lista
+	lista_distancia=sorted(set(lista_distancia)) #remove repeated values and sorts it
 	return lista_distancia
 def checando_existencia_lista_distancias(lin,col,distancia_maxima):
 	arquivodist=f'{lin}x{col}_max{distancia_maxima}_lista_distancia.txt'
@@ -269,7 +269,7 @@ def checando_existencia_lista_distancias(lin,col,distancia_maxima):
 		distancia_file.close()
 		lista_distancia=pck.loads(distancia_pck)
 	except FileNotFoundError:
-		print("Não achou a lista de distância. Iniciando processo de criação.")
+		print("It was not possible to find the file with the list of distances. Starting the creation process.")
 		lista_distancia=criando_lista_distancia(lin,col,distancia_maxima)
 		a=open(arquivodist,"ab")		 
 		dados_em_pck=pck.dumps(lista_distancia)   
@@ -284,13 +284,13 @@ def checando_existencia_lista_viz_e_lista_de_patches(lin,col,distancia_maxima):
 		viz_file.close()
 		viz=pck.loads(viz_pck)
 	except FileNotFoundError:
-		print("Não achou a lista de vizinhos. Iniciando processo de criação.")
+		print("It was not possible to find the file with the list of neighbors. Starting the creation process.")
 		viz=criando_lista_viz(lin,col,distancia_maxima)
 		a=open(arquivoviz,"ab")		 
 		dados_em_pck=pck.dumps(viz)   
 		a.write(dados_em_pck)
 		a.close()
-	######aqui vai checar borda
+	######checking border.
 	arquivoviz=f'50x50_patches_por_hectare_bordas.txt'
 	try:
 		viz_file=open(arquivoviz,"rb")
@@ -298,13 +298,13 @@ def checando_existencia_lista_viz_e_lista_de_patches(lin,col,distancia_maxima):
 		viz_file.close()
 		lista_borda=pck.loads(viz_pck)
 	except FileNotFoundError:
-		print("Não achou a lista de patches na borda. Iniciando processo de criação.")
+		print("It was not possible to find the file with the list of patches on the border. Starting the creation process.")
 		lista_borda=criando_lista_patches_cada_borda()
 		a=open(arquivoviz,"ab")		 
 		dados_em_pck=pck.dumps(lista_borda)   
 		a.write(dados_em_pck)
 		a.close()
-	#aqui vai checar lista total
+	#checking all list
 	arquivoviz=f'50x50_patches_por_hectare.txt'
 	try:
 		viz_file=open(arquivoviz,"rb")
@@ -312,7 +312,7 @@ def checando_existencia_lista_viz_e_lista_de_patches(lin,col,distancia_maxima):
 		viz_file.close()
 		lista_patches=pck.loads(viz_pck)
 	except FileNotFoundError:
-		print("Não achou a lista de patches do hectare. Iniciando processo de criação.")
+		print("It was not possible to find the file with the list of hectare. Starting the creation process.")
 		lista_patches=criando_lista_patches_cada_hectare()
 		a=open(arquivoviz,"ab")		 
 		dados_em_pck=pck.dumps(lista_patches)   
@@ -321,42 +321,40 @@ def checando_existencia_lista_viz_e_lista_de_patches(lin,col,distancia_maxima):
 	return viz,lista_patches,lista_borda
 def criando_lista_viz(lin,col,distancia_maxima):
 	lista_raios=[]
-	viz=[] #criando uma matriz vazia
-	###bloco de criar a matriz de vizinhos vazia para poder adicionar os vizinhos
-	#e como ja vai percorrer uma vez a matriz inteira, eu aproveito e ja calculo todos os vizinhos possiveis e faco a lista
-	#de vizinhos possiveis.
-	for l in range(lin): #percorrendo os loops de linhas
-		viz.append([]) #colocando as linhas na matriz
-		for c in range(col): #percorrendo os loops de colunas
-			viz[l].append([]) #colocando as colunas na matriz
-			if l==0 and c==0: #aqui checo soh pra ver se eh o primeiro patch de todos
-				continue #se for ele nao faz a conta, pois ele eh raio zero
-			else:	#qnd n for o patch 0,0 ele vai entrar aqui
+	viz=[] #creating an empty vector
+	###Portion to create the empty list of neighbors to be able to add the neighbors values.
+	#As it will go through the entire vector once, I calculate all possible neighbors and make the list of possible neighbors.
+	for l in range(lin):
+		viz.append([])
+		for c in range(col):
+			viz[l].append([])
+			if l==0 and c==0: #checking if it is the first ever patch
+				continue #if it is, it doesn't calculate because it is zero radius
+			else:	#if it is not the first ever patch.
 				distancia_tempo=((0-l)**2+(0-c)**2)**(1/2)
 				if distancia_tempo<=distancia_maxima:
 					lista_raios.append(distancia_tempo)
 
-					 #aqui eu faco a conta da distancia e adiciona na lista
-	lista_raios=sorted(set(lista_raios)) #qnd o loop termina, eu retiro os valores repetidos e ordeno a lista
-	#pois agora ela vai ter todas as distancias presentes nesse grid, e ordenadas por raio.
+					 #calculating the distance and adding it to the list
+	lista_raios=sorted(set(lista_raios)) #remove repeated values and sorts it
 
-	###bloco de adicionar listas dos raios possiveis dentro da matriz
+	###Portion to add all possible radius into the vector.
 	for l in range(lin):
 		for c in range(col):
 			for i in range(len(lista_raios)):
-				viz[l][c].append([]) #colocando todos os raios possiveis da matriz
+				viz[l][c].append([]) #adding all possible radius on the vector
 
-	###bloco de achar os vizinhos e por no raio correspondente
-	for l in range(lin): #loop da linha para o patch focal
-		for c in range(col): #loop da coluna para o patch focal
-			for ll in range(-lin,lin): #loop de linha do vizinho do patch focal
-				for cc in range(-col,col): #loop de coluna do vizinho do patch focal
-					if l==ll and c==cc: #checando se o patch focal eh o mesmo q o vizinho
-						continue #se for, acontece nada
+	###Portion to find all neighbors patches and insert on the corresponding radius
+	for l in range(lin): #loop of the row of the focal patch
+		for c in range(col): #loop of the column of the focal patch
+			for ll in range(-lin,lin): #loop of the row of the neighbor patch
+				for cc in range(-col,col): #loop of the column of the neighbor patch
+					if l==ll and c==cc: #checking if focal patch is the same as the neighbor patch
+						continue #if it is, nothing happens
 					else: 
-						dist=((l-ll)**2+(c-cc)**2)**(1/2) #calculando a distancia do patch focal(l,c) pro vizinho(ll,cc)
-						for i,j in enumerate(lista_raios): #loop para rodar nos raios existentes, pegando a casa q ele esta(i) e o valor do raio (j)
-							if dist==j: #checando se o valor da distancia calculado eh igual a algum raio e descobrindo em qual lista de vizinho por
+						dist=((l-ll)**2+(c-cc)**2)**(1/2) #computing the distance between focal patch (l,c) and neighbor patch (ll,cc)
+						for i,j in enumerate(lista_raios): 
+							if dist==j: 
 								if ll>=lin:
 									tempolin=(lin-1)+((lin-1)-ll)
 								elif ll<0:
@@ -381,7 +379,7 @@ def criando_popmigrante_densidade_patch(l,c,t,H0,h0,f0,fracao_indv_migrante,g_al
 		pop_migrante[l][c][0].append(int(fracao_indv_migrante[0]*(H0[0]/(H0[0]+g_all[l][c][2][t]))*((g_all[l][c][0][t]**2)/(g_all[l][c][0][t]+f0[0]))))
 		emigracao_patchs[l][c][0].append(int(fracao_indv_migrante[0]*(H0[0]/(H0[0]+g_all[l][c][2][t]))*((g_all[l][c][0][t]**2)/(g_all[l][c][0][t]+f0[0]))))
 	#q
-	if g_all[l][c][2][t]==0:#and g_all[l][c][3][t]==0:
+	if g_all[l][c][2][t]==0:
 		pop_migrante[l][c][1].append(int(g_all[l][c][1][t]))
 		emigracao_patchs[l][c][1].append(int(g_all[l][c][1][t]))
 	else:
@@ -397,18 +395,18 @@ def criando_popmigrante_densidade_patch(l,c,t,H0,h0,f0,fracao_indv_migrante,g_al
 
 	return pop_migrante,emigracao_patchs
 def sorteio_vizinhos(g_all,pop_migrante,taxa_disp,viz,l,c,t,visitacao_patchs,imigracao_patchs,lista_distancia):
-	#criando a pop migrante temporaria para poder diminuir desta variavel ateh chegar a zero
+	#creating the temporary migrant population to decrease it until zero
 	pop_migrante_tempo=[]
 	for i,p in enumerate(taxa_disp):
 		pop_migrante_tempo.append(pop_migrante[l][c][i][t])
-	for i,p in enumerate(pop_migrante_tempo): #i eh a casa. p eh o elemento #loop para rodar a qnt certa de pop e ja usar as taxa dela de dispersao
+	for i,p in enumerate(pop_migrante_tempo): #i is position and p is the value
 		x=0
 		while pop_migrante_tempo[i]>0 and x<len(lista_distancia):
 			for j in viz[l][c][x]:
 				
 				sorteado=random.choice(viz[l][c][x])
 				indv=(taxa_disp[i]/lista_distancia[x])*pop_migrante[l][c][i][t]
-				if indv<1: #conferindo se vai migrar um valor menor do que 1, se for eu arredondo para 1
+				if indv<1: #checking if it is going to migrate a value less than 1, if so it is rounded to 1
 					indv=1
 				if indv>pop_migrante_tempo[i]:
 					indv=pop_migrante_tempo[i]
@@ -423,10 +421,8 @@ def sorteio_vizinhos(g_all,pop_migrante,taxa_disp,viz,l,c,t,visitacao_patchs,imi
 	return g_all,visitacao_patchs,imigracao_patchs
 def dinamica_tempo0(g_all,pop_iniciais,ocupacao_total_tempo,media_regional_tempo,pop_migrante,c,l,t,patch_iniciais):
 	achou_patch=0
-	for i,j in enumerate(patch_iniciais): #aqui eu fiz um for para passar pela lista de patchs iniciais para
-		if j[0]==l and j[1]==c: #eu poder comparar com qual linha/coluna está. se alguma linha/coluna for igual ao da lista
-			#de patchs iniciais, ele adiciona a pop inicial. o 'i' serve para saber qual casa o patch esta na lista patch_iniciais
-			#e ai a mesma casa é usada para achar a pop inicial daquele patch.
+	for i,j in enumerate(patch_iniciais):#this portion iterates through the vector of initial patches to see if the value is the same
+		if j[0]==l and j[1]==c: #If it is the same, add the inicialt population on said patch.
 			
 			#pop 0 - P
 			achou_patch=1
@@ -437,7 +433,6 @@ def dinamica_tempo0(g_all,pop_iniciais,ocupacao_total_tempo,media_regional_tempo
 
 
 			#pop 1 - Q
-			#testando
 			g_all[l][c][1].append(pop_iniciais[i][1])
 			if g_all[l][c][1][t]>0.01:
 				ocupacao_total_tempo[1]+=1
@@ -458,20 +453,20 @@ def dinamica_tempo0(g_all,pop_iniciais,ocupacao_total_tempo,media_regional_tempo
 				media_regional_tempo[3]+=g_all[l][c][3][t]
 
 
-			#colocando zero na migracao
+			#adding zero to migration vector
 			pop_migrante[l][c][0].append(0)
 			pop_migrante[l][c][1].append(0)
 			pop_migrante[l][c][2].append(0)
 			pop_migrante[l][c][3].append(0)
 
 	if achou_patch==0:
-		#colocando zero nas pop iniciais
+		#adding zero to initial population
 		g_all[l][c][0].append(0)
 		g_all[l][c][1].append(0)
 		g_all[l][c][2].append(0)
 		g_all[l][c][3].append(0)
 
-		#colocando zero na migracao
+		#adding zero to migration vector
 		pop_migrante[l][c][0].append(0)
 		pop_migrante[l][c][1].append(0)
 		pop_migrante[l][c][2].append(0)
@@ -479,19 +474,19 @@ def dinamica_tempo0(g_all,pop_iniciais,ocupacao_total_tempo,media_regional_tempo
 	return g_all,pop_iniciais,ocupacao_total_tempo,media_regional_tempo,pop_migrante
 def dinamica_iterativa(g_all,pop_iniciais,ocupacao_total_tempo,media_regional_tempo,pop_migrante,c,l,t,a1,a2,a3,lambda1,lambda2,TS,TH,H0,h0,f0,ocupacao_total,Pnumerico,Q1numerico,Q2numerico):
 	
-	rfP=(math.exp((-a1*TS[0]*g_all[l][c][0][t-1])/(1+a1*TH[0]*g_all[l][c][2][t-1])))#resposta funcional especialista(P) (P para o N)
-	rfQ1=(math.exp((-a2*TS[1]*g_all[l][c][1][t-1])/(1+a2*TH[1]*g_all[l][c][2][t-1])))#resposta funcional generalsita(Q) (Q para o N)
-	rfQ2=(math.exp((-a3*TS[2]*g_all[l][c][1][t-1])/(1+a3*TH[2]*g_all[l][c][3][t-1])))#resposta funcional generalsita(Q) (Q para o H) #to-do: conferir a resposta funcional do generalista com o host alternativo (q->h)
+	rfP=(math.exp((-a1*TS[0]*g_all[l][c][0][t-1])/(1+a1*TH[0]*g_all[l][c][2][t-1])))#functional response of the specialist(P) (P para o N)
+	rfQ1=(math.exp((-a2*TS[1]*g_all[l][c][1][t-1])/(1+a2*TH[1]*g_all[l][c][2][t-1])))#functional response of the generalist(Q) (Q para o N)
+	rfQ2=(math.exp((-a3*TS[2]*g_all[l][c][1][t-1])/(1+a3*TH[2]*g_all[l][c][3][t-1])))
 	
-	#vou checar se a resposta funcional é zero ou menor, pq se for a equação dos bixos daria zero pq multiplica ela
+	#checking if functional response is zero, or less than zero
 	if rfP<=0:
-		rfP=1 #coloco igual a 1 pq ai a resposta funcional nao vai alterar em nada as equações.
+		rfP=1 #if it is zero, or less, i transform the funcional response to 1 so it does not affect the population growth equation
 	if rfQ1<=0:
 		rfQ1=1
 	if rfQ2<=0:
 		rfQ2=1
 
-	#bloquinho dinamica populacao 0 (P)
+	#Portion of population dynamics 0 (P)
 	if g_all[l][c][0][t-1]==0:
 		g_all[l][c][0].append(0)
 	else:		
@@ -499,16 +494,15 @@ def dinamica_iterativa(g_all,pop_iniciais,ocupacao_total_tempo,media_regional_te
 		if g_all[l][c][0][t]<=0.01:
 			g_all[l][c][0][t]=0
 
-	#bloquinho dinamica populacao 1 (Q):
-	#teste
+	#Portion of population dynamics 1 (Q)
 	if g_all[l][c][1][t-1]==0:
 		g_all[l][c][1].append(0)
 	else:
-		g_all[l][c][1].append(g_all[l][c][2][t-1]*rfP*(1-rfQ1)*Q1numerico) #to-do: essa equação só leva em conta 1 hospedeiro.
+		g_all[l][c][1].append(g_all[l][c][2][t-1]*rfP*(1-rfQ1)*Q1numerico)
 		if g_all[l][c][1][t]<=0.01:
 			g_all[l][c][1][t]=0
 
-	#bloquinho dinamica populacao 2 (N)
+	#Portion of population dynamics 2 (N)
 	if g_all[l][c][2][t-1]==0:
 		g_all[l][c][2].append(0)
 	else:
@@ -519,12 +513,11 @@ def dinamica_iterativa(g_all,pop_iniciais,ocupacao_total_tempo,media_regional_te
 			g_all[l][c][2][t]=1000
 
 
-	#bloquinho dinamica populacao 3 (h):
-	#teste:
+	#Portion of population dynamics 3 (H)
 	if g_all[l][c][3][t-1]==0:
 		g_all[l][c][3].append(0)
 	else:
-		g_all[l][c][3].append(g_all[l][c][3][t-1]*lambda2*rfQ2) #to-do: conferir a equação do host alternativo (h)
+		g_all[l][c][3].append(g_all[l][c][3][t-1]*lambda2*rfQ2)
 		if g_all[l][c][3][t]<=0.01:
 			g_all[l][c][3][t]=0
 		if g_all[l][c][3][t]>1000 and ocupacao_total[1][t-1]==0:
@@ -595,7 +588,7 @@ def salva_arquivos(zzzz,g_all,pop_migrante,ocupacao_total,media_regional,media_r
 
 	nome=f'read_me.txt'
 	a=open(nome,"w")
-	conteudo_readme=f'A ordem do nome é tipo.do.arquivo.txt\n \n \n Os arquivos possuem listas:\n g_all[linha][coluna][populacao][tempo]: é a populacao de cada patch por tempo\npop_migrante[linha][coluna][populacao][tempo]: é o vetor de migracao\nocupacao_total[populacao][tempo]: é a ocupacao de patchs por tempo\nmedia_regional[populacao][tempo]: é a media regional de populacao \nmedia_regional_migracao[populacao][tempo]: é a media regional de migracao\nvisitacao_patchs[linha][coluna][populacao][tempo]:é quais patchs receberam imigrantes\nimigracao_patchs[linha][coluna][populacao][tempo]: é o quanto cada patch recebeu de migrantes, ou seja, a imigracao\nemigracao_patchs[linha][coluna][pop][tempo]:é o qnt que cada pop de cada patch contribuiu para a migraçao, ou seja, a emigraçao \n \nOs valores desse conjunto de simulação são:\na1={a1}\na2={a2}\na3={a3}\nlambda1={lambda1}\nlambda2={lambda2}\ntaxa_disp={taxa_disp}\nfracao_indv_migrante={fracao_indv_migrante}\ntempo_final={tempo_final}\nlin={lin}\ncol={col}'
+	conteudo_readme=f'The order of the name is tipo.do.arquivo.txt\n \n \nAll file contains lists:\ng_all[row][col][population][generation]: it is the population for each patch by generation\npop_migrante[row][col][population][generation]: it is the vector of migration\nocupacao_total[population][generation]: it is the patch ocupation by generation\nmedia_regional[population][generation]: it is the regional mean of the population \nmedia_regional_migracao[population][generation]: it is the regional mean of migration\nvisitacao_patchs[row][col][population][generation]:it is which patch got imigration\nimigracao_patchs[row][col][population][generation]: it is how many imigrants each patch recieved.\nemigracao_patchs[row][col][pop][generation]: it is how many migrants each patch contributed\n \nThe variables of this simulations are:\na1={a1}\na2={a2}\na3={a3}\nlambda1={lambda1}\nlambda2={lambda2}\ntaxa_disp={taxa_disp}\nfracao_indv_migrante={fracao_indv_migrante}\ngeneration_final={tempo_final}\nlin={lin}\ncol={col}'
 	a.write(conteudo_readme)
 	a.close()
 	return
@@ -1318,3 +1311,7 @@ for loop_numero in [loop,loop+1,loop+2,loop+3,loop+4,loop+5]:
 		os.makedirs(pasta)
 		os.chdir(pasta)
 	loops_cenarios(loop_numero,viz,lista_patches,lista_borda)
+
+##########
+####END###
+##########
