@@ -2,7 +2,7 @@ from random import SystemRandom
 import pickle as pck 
 import math
 import os
-random=SystemRandom()
+random=SystemRandom() #generate random numbers from sources provided by the operating system. Not available on all systems.
 ######
 #P - Q - N - H or Q - H
 #P- specialist parasitoid 
@@ -18,18 +18,18 @@ random=SystemRandom()
 #H0=number of hosts needed to prevent female parasitoid to leave the patch ([PQ])
 #h0=tolerance of others host ([NH])
 #f0=tolerance of others female parasitoid ([PQ]) 
-#taxa_disp -> dispersion rate of each population (PQNH)
-#fracao_indv_migrante -> max dispersion rate of each population (PQNH/ 0Q0H)
-#tempo_final -> last generation to simulate
-#lin -> number of row
-#col -> number of col
-#pop_iniciais -> uma lista contendo as pop iniciais de cada ponto q tem pop inicial [[P,Q,N,H],[P,Q,N,H]], sendo q
-	#pop_iniciais[0] vai ser estar no patch_iniciais[0]
-#patch_iniciais -> uma lista contendo os patchs que ira iniciar com alguma pop [[l,c],[l,c]]
-#viz-> é a lista dos vizinhos e distancias criada com a funcao criando_lista_viz(). É a primeira lista criada pela funcao citada.
-#lista_raios-> list of radios in the choosen grid. It is the second list created by the function criando_lista_viz()
-#TS= "total available searching time" ([P,Q1,Q2])
-#TH = handling time ([P,Q1,Q2]) (tem dois Q pois o Q pega 2 host, então pode ter tempo de manuseio diferente para ambos. O q1 é para o host compartilhado e o Q2 para o host exclusivo do generalista.)
+#taxa_disp = dispersion rate of each population (PQNH)
+#fracao_indv_migrante = max dispersion rate of each population (PQNH/ 0Q0H)
+#tempo_final = last generation to simulate
+#lin = number of row
+#col = number of col
+#pop_iniciais = a list containing the initials of each point that has initial population [[P,Q,N,H],[P,Q,N,H]]
+#	#pop_iniciais[0] will be in patch_iniciais[0]
+#patch_iniciais = a list containing the patches that will start with some population [[l,c],[l,c]]
+#viz= is the list of neighbors and distances created with the function criando_lista_viz(). It is the first list created by the mentioned function.
+#lista_raios= list of radios in the choosen grid. It is the second list created by the function criando_lista_viz()
+#TS= total available searching time ([P,Q1,Q2])
+#TH = handling time ([P,Q1,Q2]) 
 #porcentagem_popinihost= percentage of how many patches each host occupy at the start of simulations ([N,H])
 #inicial_h = initial population of H (3)
 #inicial_n = initial population of N (2)
@@ -39,7 +39,7 @@ random=SystemRandom()
 
 
 
-def modelo_paisagem_migracao(a1,a2,a3,lambda1,lambda2,H0,h0,f0,taxa_disp,fracao_indv_migrante,tempo_final,lin,col,pop_iniciais,patch_iniciais,viz,lista_raios,TS,TH,zzzz,patches_sorteados,bOUm,solt_posi,solt_valor,hec10_bordas,para_lista_inicial,borda_meio,loop,lib_extras,Pnumerico,Q1numerico,Q2numerico):
+def modelo_paisagem_migracao(a1,a2,a3,lambda1,lambda2,H0,h0,f0,taxa_disp,fracao_indv_migrante,tempo_final,lin,col,pop_iniciais,patch_iniciais,viz,lista_raios,TS,TH,zzzz,patches_sorteados,bOUm,solt_posi,solt_valor,hec10_bordas,para_lista_inicial,borda_meio,loop,Pnumerico,Q1numerico,Q2numerico):
 	qnd_onde_liberou=[]
 	ocupacao_total=[[],[],[],[]] #criando a matriz de ocupacao ocupacao_total[pop][t]
 	ocupacao_total_tempo=[0,0,0,0] #ocupacao_total_tempo[pop]
@@ -143,49 +143,6 @@ def modelo_paisagem_migracao(a1,a2,a3,lambda1,lambda2,H0,h0,f0,taxa_disp,fracao_
 		media_regional_tempo=[0,0,0,0]
 		ocupacao_total_tempo=[0,0,0,0]
 		
-		if lib_extras==True: #aqui faz novas liberações só se tiver falado para fazer novas liberações
-			if t!=0 and t!=(tempo_final-1): #aqui ta verificando se vai ter mais liberação
-				tempo_BOL=False
-				tempo=checando_necessidade_liberacao(t, g_all,lin,col,solt_posi,solt_valor,hec10_bordas,para_lista_inicial,loop,patches_sorteados,borda_meio,lista_patches,lista_borda,qnd_onde_liberou)
-				g_all=tempo[0]
-				qnd_onde_liberou=tempo[1]
-
-				if tempo[2]==True:
-					tempo_BOL=True
-
-
-			if t!=0 and tempo_BOL==True: #ISSO REPETE PQ ELE PODE TER ADICIONADO MAIS BIXOS
-				for l in range(lin):
-					for c in range(col):
-						if g_all[l][c][0][t]>0:
-							ocupacao_total_tempo[0]+=1
-							media_regional_tempo[0]+=g_all[l][c][0][t]
-						if g_all[l][c][1][t]>0:
-							ocupacao_total_tempo[1]+=1
-							media_regional_tempo[1]+=g_all[l][c][1][t]
-						#if g_all[l][c][2][t]>0:
-						#	ocupacao_total_tempo[2]+=1
-						#	media_regional_tempo[2]+=g_all[l][c][2][t]
-						if g_all[l][c][3][t]>0:
-							ocupacao_total_tempo[3]+=1
-							media_regional_tempo[3]+=g_all[l][c][3][t]
-				ocupacao_total[0][t]=ocupacao_total_tempo[0]
-				ocupacao_total[1][t]=ocupacao_total_tempo[1]
-				ocupacao_total[2][t]=ocupacao_total_tempo[2]
-				ocupacao_total[3][t]=ocupacao_total_tempo[3]
-
-				media_regional[0][t]=media_regional_tempo[0]/grid
-				media_regional[1][t]=media_regional_tempo[1]/grid
-				media_regional[2][t]=media_regional_tempo[2]/grid
-				media_regional[3][t]=media_regional_tempo[3]/grid
-
-
-				media_regional_tempo=[0,0,0,0]
-				ocupacao_total_tempo=[0,0,0,0]
-
-
-
-	
 	salva_arquivos(zzzz,g_all,pop_migrante,ocupacao_total,media_regional,media_regional_migracao,visitacao_patchs,imigracao_patchs,emigracao_patchs,a1,a2,a3,lambda1,lambda2,taxa_disp,fracao_indv_migrante,tempo_final,lin,col,qnd_onde_liberou)
 	return
 def criando_lista_patches_cada_hectare():
@@ -875,122 +832,50 @@ def BORDA_alocando_parasitoide(solt_posi,solt_valor,patch_iniciais,pop_iniciais,
 				patches_sorteados[0].append(patch_tempo)
 	
 	return patch_iniciais,pop_iniciais,patches_sorteados
-def checando_necessidade_liberacao(t, g_all,lin,col,solt_posi,solt_valor,hec10_bordas,para_lista_inicial,loop,patches_sorteados,borda_meio,lista_patches,lista_borda,qnd_onde_liberou):
-	#lista_patches,lista_borda
-	teve_liberacao=False
-	pop_n_inicial=0
-	pop_n_t=0
-	for posicao_hectare,hectare in enumerate(lista_patches):
-		pop_n_inicial=0
-		pop_n_t=0
-		for patch in hectare:
-			pop_n_t+=g_all[patch[0]][patch[1]][2][t]
-		if pop_n_t>=925: #se mudar a pop inicial tem q mudar isso.
-			teve_liberacao=True
-			qnd_onde_liberou.append(f't{t}h{posicao_hectare}')
-			if borda_meio==0: #borda
-				patches_para_liberar=lista_borda[posicao_hectare]
-				g_all=nova_liberacao(t, g_all,lin,col,solt_posi,solt_valor,hec10_bordas,para_lista_inicial,loop,patches_sorteados,borda_meio,patches_para_liberar)
-			else: #meio
-				patches_para_liberar=lista_patches[posicao_hectare]
-				g_all=nova_liberacao(t, g_all,lin,col,solt_posi,solt_valor,hec10_bordas,para_lista_inicial,loop,patches_sorteados,borda_meio,patches_para_liberar)
-	return g_all,qnd_onde_liberou,teve_liberacao
-def nova_liberacao(t, g_all,lin,col,solt_posi,solt_valor,hec10_bordas,para_lista_inicial,loop,patches_sorteados,borda_meio,patches_para_liberar):
-	#aqui eu preciso garantir q qnd é separado eu GARANTA q nao acontece de ficar igual
-	if loop==21 or loop==19:
-		patches_q_um_para_foi=[]
-		#pondo cotesia
-		for sorteio in range(solt_valor):
-			patch_tempo=random.choice(patches_para_liberar)
-			while patch_tempo in patches_q_um_para_foi:
-				patch_tempo=random.choice(patches_para_liberar)
-			g_all[patch_tempo[0]][patch_tempo[1]][0][t]+=para_lista_inicial[0][solt_posi]
-			patches_q_um_para_foi.append(patch_tempo)
-		#pondo tetrastichus:
-		for sorteio in range(solt_valor):
-			patch_tempo=random.choice(patches_para_liberar)
-			while patch_tempo in patches_q_um_para_foi:
-				patch_tempo=random.choice(patches_para_liberar)
-			patch_tempo=random.choice(patches_para_liberar)
-			g_all[patch_tempo[0]][patch_tempo[1]][1][t]+=para_lista_inicial[1][solt_posi]
-	elif loop==20 : 
-		patches_q_um_para_foi=[]
-		#pondo ambos
-		for sorteio in range(solt_valor):
-			patch_tempo=random.choice(patches_para_liberar)
-			while patch_tempo in patches_q_um_para_foi:
-				patch_tempo=random.choice(patches_para_liberar)
-			g_all[patch_tempo[0]][patch_tempo[1]][0][t]+=para_lista_inicial[0][solt_posi]
-			g_all[patch_tempo[0]][patch_tempo[1]][1][t]+=para_lista_inicial[1][solt_posi]
-			patches_q_um_para_foi.append(patch_tempo)
-	elif loop==22:
-		patches_q_um_para_foi=[]
-		#pondo primeira cotesia
-		for sorteio in range(solt_valor):
-			patch_tempo=random.choice(patches_para_liberar)
-			while patch_tempo in patches_q_um_para_foi:
-				patch_tempo=random.choice(patches_para_liberar)
-			g_all[patch_tempo[0]][patch_tempo[1]][0][t]+=para_lista_inicial[0][solt_posi]
-			patches_q_um_para_foi.append(patch_tempo)
-		#pondo segunda cotesia:
-		for sorteio in range(solt_valor):
-			patch_tempo=random.choice(patches_para_liberar)
-			while patch_tempo in patches_q_um_para_foi:
-				patch_tempo=random.choice(patches_para_liberar)
-			patch_tempo=random.choice(patches_para_liberar)
-			g_all[patch_tempo[0]][patch_tempo[1]][0][t]+=para_lista_inicial[0][solt_posi]
-
-	return g_all
 def loops_cenarios(loop,viz,lista_patches,lista_borda):
-	if loop>5: #solturas qnd tem 10 hectares 
-		#10 hectares:
-		#1 no meio
-		hec10_1_meio_separados1=[[4,7],[4,32],[14,7],[14,32],[24,7],[24,32],[34,7],[34,32],[44,7],[44,32]]#[[4,7],[4,32],[14,7],[14,32],[24,7],[24,32],[34,7],[34,32],[44,7],[44,32]]
-		hec10_1_meio_separados2=[[4,17],[4,42],[14,17],[14,42],[24,17],[24,42],[34,17],[34,42],[44,17],[44,42]]#[[4,17],[4,42],[14,17],[14,42],[24,17],[24,42],[34,17],[34,42],[44,17],[44,42]]
+	#10 hectares:
+	#1 no meio
+	hec10_1_meio_separados1=[[4,7],[4,32],[14,7],[14,32],[24,7],[24,32],[34,7],[34,32],[44,7],[44,32]]#[[4,7],[4,32],[14,7],[14,32],[24,7],[24,32],[34,7],[34,32],[44,7],[44,32]]
+	hec10_1_meio_separados2=[[4,17],[4,42],[14,17],[14,42],[24,17],[24,42],[34,17],[34,42],[44,17],[44,42]]#[[4,17],[4,42],[14,17],[14,42],[24,17],[24,42],[34,17],[34,42],[44,17],[44,42]]
 
-		#1 na borda
-		hec10_1_borda_separados1=[[0,7],[0,32],[13,0],[13,49],[23,0],[33,0],[23,49],[33,49],[49,7],[49,32]]
-		hec10_1_borda_separados2=[[0,17],[0,42],[17,0],[17,49],[27,0],[37,0],[27,49],[37,49],[49,17],[49,42]]
+	#1 na borda
+	hec10_1_borda_separados1=[[0,7],[0,32],[13,0],[13,49],[23,0],[33,0],[23,49],[33,49],[49,7],[49,32]]
+	hec10_1_borda_separados2=[[0,17],[0,42],[17,0],[17,49],[27,0],[37,0],[27,49],[37,49],[49,17],[49,42]]
 
-		#4 na borda
-		hec10_4_borda_separados1=[[2,0],[0,9],[0,19],[7,23],[7,24],[0,33],[0,43],[2,49],[42,0],[49,9],[49,19],[47,23],[47,24],[49,33],[49,43],[42,49],[13,0],[19,0],[10,23],[16,23],[10,24],[16,24],[13,49],[19,49],[23,0],[29,0],[20,23],[26,23],[20,24],[26,24],[23,49],[29,49],[33,0],[39,0],[30,23],[36,23],[30,24],[36,24],[33,49],[39,49]]
-		hec10_4_borda_separados2=[[7,0],[0,4],[0,14],[2,23],[2,24],[0,28],[0,38],[7,49],[47,0],[49,4],[49,14],[42,23],[42,24],[49,28],[49,38],[47,49],[10,0],[16,0],[13,23],[19,23],[13,24],[19,24],[10,49],[16,49],[20,0],[26,0],[23,23],[29,23],[23,24],[29,24],[20,49],[26,49],[30,0],[36,0],[33,23],[39,23],[33,24],[39,24],[30,49],[36,49]]
+	#4 na borda
+	hec10_4_borda_separados1=[[2,0],[0,9],[0,19],[7,23],[7,24],[0,33],[0,43],[2,49],[42,0],[49,9],[49,19],[47,23],[47,24],[49,33],[49,43],[42,49],[13,0],[19,0],[10,23],[16,23],[10,24],[16,24],[13,49],[19,49],[23,0],[29,0],[20,23],[26,23],[20,24],[26,24],[23,49],[29,49],[33,0],[39,0],[30,23],[36,23],[30,24],[36,24],[33,49],[39,49]]
+	hec10_4_borda_separados2=[[7,0],[0,4],[0,14],[2,23],[2,24],[0,28],[0,38],[7,49],[47,0],[49,4],[49,14],[42,23],[42,24],[49,28],[49,38],[47,49],[10,0],[16,0],[13,23],[19,23],[13,24],[19,24],[10,49],[16,49],[20,0],[26,0],[23,23],[29,23],[23,24],[29,24],[20,49],[26,49],[30,0],[36,0],[33,23],[39,23],[33,24],[39,24],[30,49],[36,49]]
 
-		#4 no meio:
-		hec10_4_meio_separados1=[[2,9],[2,19],[7,9],[7,19],[2,34],[2,44],[7,34],[7,44],[12,9],[12,19],[17,9],[17,19],[12,34],[12,44],[17,34],[17,44],[22,9],[22,19],[27,9],[27,19],[22,34],[22,44],[27,34],[27,44],[32,9],[32,19],[37,9],[37,19],[32,34],[32,44],[37,34],[37,44],[42,9],[42,19],[47,9],[47,19],[42,34],[42,44],[47,34],[47,44]]
-		hec10_4_meio_separados2=[[2,4],[2,14],[7,4],[7,14],[2,29],[2,39],[7,29],[7,39],[12,4],[12,14],[17,4],[17,14],[12,29],[12,39],[17,29],[17,39],[22,4],[22,14],[27,4],[27,14],[22,29],[22,39],[27,29],[27,39],[32,4],[32,14],[37,4],[37,14],[32,29],[32,39],[37,29],[37,39],[42,4],[42,14],[47,4],[47,14],[42,29],[42,39],[47,29],[47,39]]
-		
-		#6 no meio
-		#hec10_4_meio_separados1=[[2,2],[7,2],[2,10],[7,10],[2,18],[7,18],[12,2],[17,2],[12,10],[17,10],[12,18],[17,18],[22,2],[27,2],[22,10],[7,10],[22,18],[27,18],[32,2],[37,2],[32,10],[37,10],[32,18],[37,18],[42,2],[47,2],[42,10],[47,10],[42,18],[47,18],[2,27],[7,27],[2,35],[7,35],[2,43],[7,43],[12,27],[17,27],[12,35],[17,35],[12,43],[17,43],[22,27],[27,27],[22,35],[7,35],[22,43],[27,43],[32,27],[37,27],[32,35],[37,35],[32,43],[37,43],[42,27],[47,27],[42,35],[47,35],[42,43],[47,43]]
-		#hec10_4_meio_separados2=[[2,6],[7,6],[2,14],[7,14],[2,22],[7,22],[12,6],[17,6],[12,14],[17,14],[12,22],[17,22],[22,6],[27,6],[22,14],[27,14],[22,22],[27,22],[32,6],[37,6],[32,14],[37,14],[32,22],[37,22],[42,6],[47,6],[42,14],[47,14],[42,22],[47,22],[2,31],[7,31],[2,39],[7,39],[2,47],[7,47],[12,31],[17,31],[12,39],[17,39],[12,47],[17,47],[22,31],[27,31],[22,39],[27,39],[22,47],[27,47],[32,31],[37,31],[32,39],[37,39],[32,47],[37,47],[42,31],[47,31],[42,39],[47,39],[42,47],[47,47]]
-		#4 na borda
-		#hec10_4_borda_separados1=[[1,0],[6,0],[0,2],[0,12],[1,23],[6,23],[1,24],[6,24],[0,27],[0,37],[1,49],[6,49],[48,0],[43,0],[49,2],[49,12],[48,23],[43,23],[48,24],[43,24],[49,27],[49,37],[48,49],[43,49],[11,0],[14,0],[17,0],[12,23],[15,23],[18,23],[12,24],[15,24],[18,24],[11,49],[14,49],[17,49],[21,0],[24,0],[27,0],[22,23],[25,23],[28,23],[22,24],[25,24],[28,24],[21,49],[24,49],[27,49],[31,0],[34,0],[37,0],[32,23],[35,23],[38,23],[32,24],[35,24],[38,24],[31,49],[34,49],[37,49]]
-		#hec10_4_borda_separados2=[[3,0],[8,0],[0,6],[0,18],[3,23],[8,23],[3,24],[8,24],[0,31],[0,43],[3,49],[8,49],[46,0],[41,0],[49,6],[49,18],[46,23],[41,23],[46,24],[41,24],[49,31],[49,43],[46,49],[41,49],[12,0],[15,0],[18,0],[11,23],[14,23],[17,23],[11,24],[14,24],[17,24],[12,49],[15,49],[18,49],[22,0],[25,0],[28,0],[21,23],[24,23],[27,23],[21,24],[24,24],[27,24],[22,49],[25,49],[28,49],[32,0],[35,0],[38,0],[31,23],[34,23],[37,23],[31,24],[34,24],[37,24],[32,49],[35,49],[38,49]]
+	#4 no meio:
+	hec10_4_meio_separados1=[[2,9],[2,19],[7,9],[7,19],[2,34],[2,44],[7,34],[7,44],[12,9],[12,19],[17,9],[17,19],[12,34],[12,44],[17,34],[17,44],[22,9],[22,19],[27,9],[27,19],[22,34],[22,44],[27,34],[27,44],[32,9],[32,19],[37,9],[37,19],[32,34],[32,44],[37,34],[37,44],[42,9],[42,19],[47,9],[47,19],[42,34],[42,44],[47,34],[47,44]]
+	hec10_4_meio_separados2=[[2,4],[2,14],[7,4],[7,14],[2,29],[2,39],[7,29],[7,39],[12,4],[12,14],[17,4],[17,14],[12,29],[12,39],[17,29],[17,39],[22,4],[22,14],[27,4],[27,14],[22,29],[22,39],[27,29],[27,39],[32,4],[32,14],[37,4],[37,14],[32,29],[32,39],[37,29],[37,39],[42,4],[42,14],[47,4],[47,14],[42,29],[42,39],[47,29],[47,39]]
+	
+	#6 no meio
+	#hec10_4_meio_separados1=[[2,2],[7,2],[2,10],[7,10],[2,18],[7,18],[12,2],[17,2],[12,10],[17,10],[12,18],[17,18],[22,2],[27,2],[22,10],[7,10],[22,18],[27,18],[32,2],[37,2],[32,10],[37,10],[32,18],[37,18],[42,2],[47,2],[42,10],[47,10],[42,18],[47,18],[2,27],[7,27],[2,35],[7,35],[2,43],[7,43],[12,27],[17,27],[12,35],[17,35],[12,43],[17,43],[22,27],[27,27],[22,35],[7,35],[22,43],[27,43],[32,27],[37,27],[32,35],[37,35],[32,43],[37,43],[42,27],[47,27],[42,35],[47,35],[42,43],[47,43]]
+	#hec10_4_meio_separados2=[[2,6],[7,6],[2,14],[7,14],[2,22],[7,22],[12,6],[17,6],[12,14],[17,14],[12,22],[17,22],[22,6],[27,6],[22,14],[27,14],[22,22],[27,22],[32,6],[37,6],[32,14],[37,14],[32,22],[37,22],[42,6],[47,6],[42,14],[47,14],[42,22],[47,22],[2,31],[7,31],[2,39],[7,39],[2,47],[7,47],[12,31],[17,31],[12,39],[17,39],[12,47],[17,47],[22,31],[27,31],[22,39],[27,39],[22,47],[27,47],[32,31],[37,31],[32,39],[37,39],[32,47],[37,47],[42,31],[47,31],[42,39],[47,39],[42,47],[47,47]]
+	#4 na borda
+	#hec10_4_borda_separados1=[[1,0],[6,0],[0,2],[0,12],[1,23],[6,23],[1,24],[6,24],[0,27],[0,37],[1,49],[6,49],[48,0],[43,0],[49,2],[49,12],[48,23],[43,23],[48,24],[43,24],[49,27],[49,37],[48,49],[43,49],[11,0],[14,0],[17,0],[12,23],[15,23],[18,23],[12,24],[15,24],[18,24],[11,49],[14,49],[17,49],[21,0],[24,0],[27,0],[22,23],[25,23],[28,23],[22,24],[25,24],[28,24],[21,49],[24,49],[27,49],[31,0],[34,0],[37,0],[32,23],[35,23],[38,23],[32,24],[35,24],[38,24],[31,49],[34,49],[37,49]]
+	#hec10_4_borda_separados2=[[3,0],[8,0],[0,6],[0,18],[3,23],[8,23],[3,24],[8,24],[0,31],[0,43],[3,49],[8,49],[46,0],[41,0],[49,6],[49,18],[46,23],[41,23],[46,24],[41,24],[49,31],[49,43],[46,49],[41,49],[12,0],[15,0],[18,0],[11,23],[14,23],[17,23],[11,24],[14,24],[17,24],[12,49],[15,49],[18,49],[22,0],[25,0],[28,0],[21,23],[24,23],[27,23],[21,24],[24,24],[27,24],[22,49],[25,49],[28,49],[32,0],[35,0],[38,0],[31,23],[34,23],[37,23],[31,24],[34,24],[37,24],[32,49],[35,49],[38,49]]
 
-		#8 no meio
-		hec10_8_meio_separados1=[[2,1],[7,1],[2,7],[7,7],[2,13],[7,13],[2,19],[7,19],[12,1],[17,1],[12,7],[17,7],[12,13],[17,13],[12,19],[17,19],[22,1],[27,1],[22,7],[27,7],[22,13],[27,13],[22,19],[27,19],[32,1],[37,1],[32,7],[37,7],[32,13],[37,13],[32,19],[37,19],[42,1],[47,1],[42,7],[47,7],[42,13],[47,13],[42,19],[47,19],[2,26],[7,26],[2,32],[7,32],[2,38],[7,38],[2,44],[7,44],[12,26],[17,26],[12,32],[17,32],[12,38],[17,38],[12,44],[17,44],[22,26],[27,26],[22,32],[27,32],[22,38],[27,38],[22,44],[27,44],[32,26],[37,26],[32,32],[37,32],[32,38],[37,38],[32,44],[37,44],[42,26],[47,26],[42,32],[47,32],[42,38],[47,38],[42,44],[47,44]]
-		hec10_8_meio_separados2=[[2,4],[7,4],[2,10],[7,10],[2,16],[7,16],[2,22],[7,22],[12,4],[17,4],[12,10],[17,10],[12,16],[17,16],[12,22],[17,22],[22,4],[27,4],[22,10],[27,10],[22,16],[27,16],[22,22],[27,22],[32,4],[37,4],[32,10],[37,10],[32,16],[37,16],[32,22],[37,22],[42,4],[47,4],[42,10],[47,10],[42,16],[47,16],[42,22],[47,22],[2,29],[7,29],[2,35],[7,35],[2,41],[7,41],[2,47],[7,47],[12,29],[17,29],[12,35],[17,35],[12,41],[17,41],[12,47],[17,47],[22,29],[27,29],[22,35],[27,35],[22,41],[27,41],[22,47],[27,47],[32,29],[37,29],[32,35],[37,35],[32,41],[37,41],[32,47],[37,47],[42,29],[47,29],[42,35],[47,35],[42,41],[47,41],[42,47],[47,47]]
-		#8 na borda
-		hec10_8_borda_separados1=[[1,0],[6,0],[0,2],[0,12],[1,23],[6,23],[0,9],[0,21],[1,24],[6,24],[0,27],[0,37],[1,49],[6,49],[0,34],[0,47],[48,0],[43,0],[49,2],[49,12],[48,23],[43,23],[49,9],[49,21],[48,24],[43,24],[49,27],[49,37],[48,49],[43,49],[49,34],[49,47],[11,0],[14,0],[17,0],[12,23],[15,23],[18,23],[16,0],[13,23],[12,24],[15,24],[18,24],[11,49],[14,49],[17,49],[13,24],[16,49],[21,0],[24,0],[27,0],[22,23],[25,23],[28,23],[26,0],[23,23],[22,24],[25,24],[28,24],[21,49],[24,49],[27,49],[23,24],[26,49],[31,0],[34,0],[37,0],[32,23],[35,23],[38,23],[36,0],[33,23],[32,24],[35,24],[38,24],[31,49],[34,49],[37,49],[33,24],[36,49]]
-		hec10_8_borda_separados2=[[3,0],[8,0],[0,6],[0,18],[3,23],[8,23],[0,4],[0,15],[3,24],[8,24],[0,31],[0,43],[3,49],[8,49],[0,29],[0,40],[46,0],[41,0],[49,6],[49,18],[46,23],[41,23],[49,4],[49,15],[46,24],[41,24],[49,31],[49,43],[46,49],[41,49],[49,29],[49,40],[12,0],[15,0],[18,0],[11,23],[14,23],[17,23],[13,0],[16,23],[11,24],[14,24],[17,24],[12,49],[15,49],[18,49],[16,24],[13,49],[22,0],[25,0],[28,0],[21,23],[24,23],[27,23],[23,0],[26,23],[21,24],[24,24],[27,24],[22,49],[25,49],[28,49],[26,24],[23,49],[32,0],[35,0],[38,0],[31,23],[34,23],[37,23],[33,0],[36,23],[31,24],[34,24],[37,24],[32,49],[35,49],[38,49],[36,24],[33,49]]
-		
-		hec10_8_meio=[hec10_8_meio_separados1,hec10_8_meio_separados2]
-		hec10_8_borda=[hec10_8_borda_separados1,hec10_8_borda_separados2]
-		hec10_4_borda=[hec10_4_borda_separados1,hec10_4_borda_separados2]
-		hec10_4_meio=[hec10_4_meio_separados1,hec10_4_meio_separados2]
-		hec10_1_borda=[hec10_1_borda_separados1,hec10_1_borda_separados2]
-		hec10_1_meio=[hec10_1_meio_separados1,hec10_1_meio_separados2]
-		
-		
-
-		hec10_1=[hec10_1_borda,hec10_1_meio]#sempre primeiro a borda e dps o meio
-		hec10_4=[hec10_4_borda,hec10_4_meio]#sempre primeiro a borda e dps o meio
-		hec10_8=[hec10_8_borda,hec10_8_meio]#sempre primeiro a borda e dps o meio
-		hec10=[hec10_1,hec10_4,hec10_8]
-		hec10_bordas=[hec10_1_borda,hec10_4_borda,hec10_8_borda]
-	elif loop>19 and loop>4: #solturas qnd tem 5 hectares
-		solturas5pontos=[[[25,5],[25,15],[25,25],[25,35],[25,45]],[[25,25],[0,25],[49,25],[25,0],[25,49]]]
-		solturas1ponto=[[25,25],[0,25]]
+	#8 no meio
+	hec10_8_meio_separados1=[[2,1],[7,1],[2,7],[7,7],[2,13],[7,13],[2,19],[7,19],[12,1],[17,1],[12,7],[17,7],[12,13],[17,13],[12,19],[17,19],[22,1],[27,1],[22,7],[27,7],[22,13],[27,13],[22,19],[27,19],[32,1],[37,1],[32,7],[37,7],[32,13],[37,13],[32,19],[37,19],[42,1],[47,1],[42,7],[47,7],[42,13],[47,13],[42,19],[47,19],[2,26],[7,26],[2,32],[7,32],[2,38],[7,38],[2,44],[7,44],[12,26],[17,26],[12,32],[17,32],[12,38],[17,38],[12,44],[17,44],[22,26],[27,26],[22,32],[27,32],[22,38],[27,38],[22,44],[27,44],[32,26],[37,26],[32,32],[37,32],[32,38],[37,38],[32,44],[37,44],[42,26],[47,26],[42,32],[47,32],[42,38],[47,38],[42,44],[47,44]]
+	hec10_8_meio_separados2=[[2,4],[7,4],[2,10],[7,10],[2,16],[7,16],[2,22],[7,22],[12,4],[17,4],[12,10],[17,10],[12,16],[17,16],[12,22],[17,22],[22,4],[27,4],[22,10],[27,10],[22,16],[27,16],[22,22],[27,22],[32,4],[37,4],[32,10],[37,10],[32,16],[37,16],[32,22],[37,22],[42,4],[47,4],[42,10],[47,10],[42,16],[47,16],[42,22],[47,22],[2,29],[7,29],[2,35],[7,35],[2,41],[7,41],[2,47],[7,47],[12,29],[17,29],[12,35],[17,35],[12,41],[17,41],[12,47],[17,47],[22,29],[27,29],[22,35],[27,35],[22,41],[27,41],[22,47],[27,47],[32,29],[37,29],[32,35],[37,35],[32,41],[37,41],[32,47],[37,47],[42,29],[47,29],[42,35],[47,35],[42,41],[47,41],[42,47],[47,47]]
+	#8 na borda
+	hec10_8_borda_separados1=[[1,0],[6,0],[0,2],[0,12],[1,23],[6,23],[0,9],[0,21],[1,24],[6,24],[0,27],[0,37],[1,49],[6,49],[0,34],[0,47],[48,0],[43,0],[49,2],[49,12],[48,23],[43,23],[49,9],[49,21],[48,24],[43,24],[49,27],[49,37],[48,49],[43,49],[49,34],[49,47],[11,0],[14,0],[17,0],[12,23],[15,23],[18,23],[16,0],[13,23],[12,24],[15,24],[18,24],[11,49],[14,49],[17,49],[13,24],[16,49],[21,0],[24,0],[27,0],[22,23],[25,23],[28,23],[26,0],[23,23],[22,24],[25,24],[28,24],[21,49],[24,49],[27,49],[23,24],[26,49],[31,0],[34,0],[37,0],[32,23],[35,23],[38,23],[36,0],[33,23],[32,24],[35,24],[38,24],[31,49],[34,49],[37,49],[33,24],[36,49]]
+	hec10_8_borda_separados2=[[3,0],[8,0],[0,6],[0,18],[3,23],[8,23],[0,4],[0,15],[3,24],[8,24],[0,31],[0,43],[3,49],[8,49],[0,29],[0,40],[46,0],[41,0],[49,6],[49,18],[46,23],[41,23],[49,4],[49,15],[46,24],[41,24],[49,31],[49,43],[46,49],[41,49],[49,29],[49,40],[12,0],[15,0],[18,0],[11,23],[14,23],[17,23],[13,0],[16,23],[11,24],[14,24],[17,24],[12,49],[15,49],[18,49],[16,24],[13,49],[22,0],[25,0],[28,0],[21,23],[24,23],[27,23],[23,0],[26,23],[21,24],[24,24],[27,24],[22,49],[25,49],[28,49],[26,24],[23,49],[32,0],[35,0],[38,0],[31,23],[34,23],[37,23],[33,0],[36,23],[31,24],[34,24],[37,24],[32,49],[35,49],[38,49],[36,24],[33,49]]
+	
+	hec10_8_meio=[hec10_8_meio_separados1,hec10_8_meio_separados2]
+	hec10_8_borda=[hec10_8_borda_separados1,hec10_8_borda_separados2]
+	hec10_4_borda=[hec10_4_borda_separados1,hec10_4_borda_separados2]
+	hec10_4_meio=[hec10_4_meio_separados1,hec10_4_meio_separados2]
+	hec10_1_borda=[hec10_1_borda_separados1,hec10_1_borda_separados2]
+	hec10_1_meio=[hec10_1_meio_separados1,hec10_1_meio_separados2]
+	
+	hec10_1=[hec10_1_borda,hec10_1_meio]#sempre primeiro a borda e dps o meio
+	hec10_4=[hec10_4_borda,hec10_4_meio]#sempre primeiro a borda e dps o meio
+	hec10_8=[hec10_8_borda,hec10_8_meio]#sempre primeiro a borda e dps o meio
+	hec10=[hec10_1,hec10_4,hec10_8]
+	hec10_bordas=[hec10_1_borda,hec10_4_borda,hec10_8_borda]
 	##############################
 	####CENARIOS COM LIBERAÇÃO####
 	##############################
@@ -1050,7 +935,7 @@ def loops_cenarios(loop,viz,lista_patches,lista_borda):
 						replicas=0
 						total_replicas=0
 						while replicas<10 or total_replicas<50:
-							modelo_paisagem_migracao(a1,a2,a3,lambda1,lambda2,H0,h0,f0,taxa_disp,fracao_indv_migrante,tempo_final,lin,col,pop_iniciais,patch_iniciais,viz,lista_raios,TS,TH,zzzz,patches_sorteados,bOUm,solt_posi,solt_valor,hec10_bordas,para_lista_inicial,borda_meio,loop,lib_extras,Pnumerico,Q1numerico,Q2numerico)
+							modelo_paisagem_migracao(a1,a2,a3,lambda1,lambda2,H0,h0,f0,taxa_disp,fracao_indv_migrante,tempo_final,lin,col,pop_iniciais,patch_iniciais,viz,lista_raios,TS,TH,zzzz,patches_sorteados,bOUm,solt_posi,solt_valor,hec10_bordas,para_lista_inicial,borda_meio,loop,Pnumerico,Q1numerico,Q2numerico)
 							ocupacao_file=open(f'{zzzz}_ocupacao_total.txt',"rb")
 							zzzz+=1
 							ocupacao_pck=ocupacao_file.read()
@@ -1115,7 +1000,7 @@ def loops_cenarios(loop,viz,lista_patches,lista_borda):
 						replicas=0
 						total_replicas=0
 						while replicas<10 or total_replicas<50:
-							modelo_paisagem_migracao(a1,a2,a3,lambda1,lambda2,H0,h0,f0,taxa_disp,fracao_indv_migrante,tempo_final,lin,col,pop_iniciais,patch_iniciais,viz,lista_raios,TS,TH,zzzz,patches_sorteados,bOUm,solt_posi,solt_valor,hec10_bordas,para_lista_inicial,borda_meio,loop,lib_extras,Pnumerico,Q1numerico,Q2numerico)
+							modelo_paisagem_migracao(a1,a2,a3,lambda1,lambda2,H0,h0,f0,taxa_disp,fracao_indv_migrante,tempo_final,lin,col,pop_iniciais,patch_iniciais,viz,lista_raios,TS,TH,zzzz,patches_sorteados,bOUm,solt_posi,solt_valor,hec10_bordas,para_lista_inicial,borda_meio,loop,Pnumerico,Q1numerico,Q2numerico)
 
 							ocupacao_file=open(f'{zzzz}_ocupacao_total.txt',"rb")
 							zzzz+=1
@@ -1181,7 +1066,7 @@ def loops_cenarios(loop,viz,lista_patches,lista_borda):
 						replicas=0
 						total_replicas=0
 						while replicas<10 or total_replicas<50:
-							modelo_paisagem_migracao(a1,a2,a3,lambda1,lambda2,H0,h0,f0,taxa_disp,fracao_indv_migrante,tempo_final,lin,col,pop_iniciais,patch_iniciais,viz,lista_raios,TS,TH,zzzz,patches_sorteados,bOUm,solt_posi,solt_valor,hec10_bordas,para_lista_inicial,borda_meio,loop,lib_extras,Pnumerico,Q1numerico,Q2numerico)
+							modelo_paisagem_migracao(a1,a2,a3,lambda1,lambda2,H0,h0,f0,taxa_disp,fracao_indv_migrante,tempo_final,lin,col,pop_iniciais,patch_iniciais,viz,lista_raios,TS,TH,zzzz,patches_sorteados,bOUm,solt_posi,solt_valor,hec10_bordas,para_lista_inicial,borda_meio,loop,Pnumerico,Q1numerico,Q2numerico)
 
 							ocupacao_file=open(f'{zzzz}_ocupacao_total.txt',"rb")
 							zzzz+=1
@@ -1247,7 +1132,7 @@ def loops_cenarios(loop,viz,lista_patches,lista_borda):
 						total_replicas=0
 						replicas=0
 						while replicas<10 or total_replicas<50:
-							modelo_paisagem_migracao(a1,a2,a3,lambda1,lambda2,H0,h0,f0,taxa_disp,fracao_indv_migrante,tempo_final,lin,col,pop_iniciais,patch_iniciais,viz,lista_raios,TS,TH,zzzz,patches_sorteados,bOUm,solt_posi,solt_valor,hec10_bordas,para_lista_inicial,borda_meio,loop,lib_extras,Pnumerico,Q1numerico,Q2numerico)
+							modelo_paisagem_migracao(a1,a2,a3,lambda1,lambda2,H0,h0,f0,taxa_disp,fracao_indv_migrante,tempo_final,lin,col,pop_iniciais,patch_iniciais,viz,lista_raios,TS,TH,zzzz,patches_sorteados,bOUm,solt_posi,solt_valor,hec10_bordas,para_lista_inicial,borda_meio,loop,Pnumerico,Q1numerico,Q2numerico)
 
 							ocupacao_file=open(f'{zzzz}_ocupacao_total.txt',"rb")
 							zzzz+=1
@@ -1313,7 +1198,7 @@ def loops_cenarios(loop,viz,lista_patches,lista_borda):
 						total_replicas=0
 						replicas=0
 						while replicas<10 or total_replicas<50:
-							modelo_paisagem_migracao(a1,a2,a3,lambda1,lambda2,H0,h0,f0,taxa_disp,fracao_indv_migrante,tempo_final,lin,col,pop_iniciais,patch_iniciais,viz,lista_raios,TS,TH,zzzz,patches_sorteados,bOUm,solt_posi,solt_valor,hec10_bordas,para_lista_inicial,borda_meio,loop,lib_extras,Pnumerico,Q1numerico,Q2numerico)
+							modelo_paisagem_migracao(a1,a2,a3,lambda1,lambda2,H0,h0,f0,taxa_disp,fracao_indv_migrante,tempo_final,lin,col,pop_iniciais,patch_iniciais,viz,lista_raios,TS,TH,zzzz,patches_sorteados,bOUm,solt_posi,solt_valor,hec10_bordas,para_lista_inicial,borda_meio,loop,Pnumerico,Q1numerico,Q2numerico)
 
 							ocupacao_file=open(f'{zzzz}_ocupacao_total.txt',"rb")
 							zzzz+=1
@@ -1379,7 +1264,7 @@ def loops_cenarios(loop,viz,lista_patches,lista_borda):
 						total_replicas=0
 						replicas=0
 						while replicas<10 or total_replicas<50:
-							modelo_paisagem_migracao(a1,a2,a3,lambda1,lambda2,H0,h0,f0,taxa_disp,fracao_indv_migrante,tempo_final,lin,col,pop_iniciais,patch_iniciais,viz,lista_raios,TS,TH,zzzz,patches_sorteados,bOUm,solt_posi,solt_valor,hec10_bordas,para_lista_inicial,borda_meio,loop,lib_extras,Pnumerico,Q1numerico,Q2numerico)
+							modelo_paisagem_migracao(a1,a2,a3,lambda1,lambda2,H0,h0,f0,taxa_disp,fracao_indv_migrante,tempo_final,lin,col,pop_iniciais,patch_iniciais,viz,lista_raios,TS,TH,zzzz,patches_sorteados,bOUm,solt_posi,solt_valor,hec10_bordas,para_lista_inicial,borda_meio,loop,Pnumerico,Q1numerico,Q2numerico)
 
 							ocupacao_file=open(f'{zzzz}_ocupacao_total.txt',"rb")
 							zzzz+=1
@@ -1396,14 +1281,6 @@ def loops_cenarios(loop,viz,lista_patches,lista_borda):
 ############################
 ############################
 
-
-
-
-
-lib_extras=False
-
-
-loop=23
 lin=50
 col=50
 distancia_maxima=3
@@ -1412,32 +1289,32 @@ tempoo=checando_existencia_lista_viz_e_lista_de_patches(lin,col,distancia_maxima
 viz=tempoo[0]
 lista_patches=tempoo[1]
 lista_borda=tempoo[2]
-if loop==23:
-	wd_pasta_origem=f'{os.getcwd()}'
-	for loop_numero in [loop,loop+1,loop+2,loop+3,loop+4,loop+5]:
-		if loop_numero==23:
-			pasta=f'{wd_pasta_origem}\\so cotesia'
-			os.makedirs(pasta)
-			os.chdir(pasta)
-		if loop_numero==24:
-			#pasta=f'{wd_pasta_origem}\\ambos juntos'
-			#os.makedirs(pasta)
-			#os.chdir(pasta)
-			continue
-		if loop_numero==25:
-			pasta=f'{wd_pasta_origem}\\ambos separados'
-			os.makedirs(pasta)
-			os.chdir(pasta)
-		if loop_numero==26:
-			pasta=f'{wd_pasta_origem}\\cotesia nos dois6k'
-			os.makedirs(pasta)
-			os.chdir(pasta)
-		if loop_numero==27:
-			pasta=f'{wd_pasta_origem}\\cotesia nos dois13k'
-			os.makedirs(pasta)
-			os.chdir(pasta)
-		if loop_numero==28:
-			pasta=f'{wd_pasta_origem}\\tetrastichus nos dois13k'
-			os.makedirs(pasta)
-			os.chdir(pasta)
-		loops_cenarios(loop_numero,viz,lista_patches,lista_borda)
+loop=23
+wd_pasta_origem=f'{os.getcwd()}'
+for loop_numero in [loop,loop+1,loop+2,loop+3,loop+4,loop+5]:
+	if loop_numero==23:
+		pasta=f'{wd_pasta_origem}\\so cotesia'
+		os.makedirs(pasta)
+		os.chdir(pasta)
+	if loop_numero==24:
+		pasta=f'{wd_pasta_origem}\\ambos juntos'
+		os.makedirs(pasta)
+		os.chdir(pasta)
+		continue
+	if loop_numero==25:
+		pasta=f'{wd_pasta_origem}\\ambos separados'
+		os.makedirs(pasta)
+		os.chdir(pasta)
+	if loop_numero==26:
+		pasta=f'{wd_pasta_origem}\\cotesia nos dois6k'
+		os.makedirs(pasta)
+		os.chdir(pasta)
+	if loop_numero==27:
+		pasta=f'{wd_pasta_origem}\\cotesia nos dois13k'
+		os.makedirs(pasta)
+		os.chdir(pasta)
+	if loop_numero==28:
+		pasta=f'{wd_pasta_origem}\\tetrastichus nos dois13k'
+		os.makedirs(pasta)
+		os.chdir(pasta)
+	loops_cenarios(loop_numero,viz,lista_patches,lista_borda)
