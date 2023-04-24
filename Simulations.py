@@ -593,10 +593,9 @@ def salva_arquivos(zzzz,g_all,pop_migrante,ocupacao_total,media_regional,media_r
 	a.close()
 	return
 def criador_vetor(lin,col,tempo_final):
-	#Primeiro eu crio uma lista vazia, e dps percorro o numero de linhas e vou adicionando uma lista vazia opr iteracao.
-	#Em seguida, dentro de cada linha, eu percorro o numero de colunas e vou adicionando lista vazia por coluna, por linha
-	#e em seguida percorro o numero de pop dentro de cada coluna e adiciona listas vazias iguais o numero de pop
-	#dentro de cada coluna dentro de cada linha.
+	#First is created an empty vector. Then i iterate all the row on the space vector and add a empty list on each iteration
+	#Then, it is iterate all the column of the space vector and add an empty list 
+	#then i iterate how many population each patch has and add 4 empty list (one for each population)
 	g_all=[] #g_all[lin][col][pop][tempo]
 	pop_migrante=[] #pop_migrante[lin][col][pop][tempo]
 	visitacao_patchs=[]
@@ -625,17 +624,17 @@ def criador_vetor(lin,col,tempo_final):
 				imigracao_patchs[l][c][2].append(0)
 				imigracao_patchs[l][c][3].append(0)
 	return g_all,pop_migrante,visitacao_patchs,imigracao_patchs,emigracao_patchs
-def sorteio_pop_inicial_host(lin,col,porcentagem_popinihost,inicial_h,inicial_n,solt_valor,loop,lista_patches): #retorna em primeiro os patches iniciais e em segundo as populações iniciais APENAS DO HOST
+def sorteio_pop_inicial_host(lin,col,porcentagem_popinihost,inicial_h,inicial_n,solt_valor,loop,lista_patches):#returns first initial patches then initial population FROM THE HOST ONLY
 	pop_iniciais=[]
 	grid=lin*col
 	numero_patch_lib=grid*porcentagem_popinihost[0]
 	numero_patch_lib/=10
 	if loop==21 or loop==22 or loop==25 or loop==26 or loop==27 or loop==28:
 		porcentagem_n=int(numero_patch_lib-(solt_valor*2)) #n
-		porcentagem_h=int(numero_patch_lib-(solt_valor*2)) #h #aqui ta indo com os valores do outro host
+		porcentagem_h=int(numero_patch_lib-(solt_valor*2)) #h
 	else:
 		porcentagem_n=int(numero_patch_lib-solt_valor) #n
-		porcentagem_h=int(numero_patch_lib-solt_valor) #h #aqui ta indo com os valores do outro host
+		porcentagem_h=int(numero_patch_lib-solt_valor) #h
 	patch_ini=[]
 
 	for posicao_patch,lista_dos_patches in enumerate(lista_patches):
@@ -673,7 +672,7 @@ def MEIO_alocando_parasitoide(solt_posi,solt_valor,patch_iniciais,pop_iniciais,l
 				patches_sorteados[0].append(patch_tempo)
 	elif loop==21 or loop==25:
 		patches_sorteados=[[],[]]
-		#pondo cotesia:
+		#cotesia:
 		for qual_hectare in lista_patches:
 			for sorteio in range(solt_valor):
 				
@@ -684,7 +683,7 @@ def MEIO_alocando_parasitoide(solt_posi,solt_valor,patch_iniciais,pop_iniciais,l
 				patch_iniciais.append(patch_tempo)
 				pop_iniciais.append([para_lista_inicial[0][solt_posi],0,inicial_n,0])
 				patches_sorteados[0].append(patch_tempo)
-		#pondo tetrastichus
+		#tetrastichus
 		for qual_hectare in lista_patches:
 			for sorteio in range(solt_valor):
 				patch_tempo=random.choice(qual_hectare)
@@ -695,7 +694,7 @@ def MEIO_alocando_parasitoide(solt_posi,solt_valor,patch_iniciais,pop_iniciais,l
 				patches_sorteados[1].append(patch_tempo)
 	elif loop==22 or loop==26 or loop==27:
 		patches_sorteados=[[],[]]
-		#pondo cotesia:
+		#cotesia:
 		for qual_hectare in lista_patches:
 			for sorteio in range(solt_valor):
 				
@@ -706,7 +705,7 @@ def MEIO_alocando_parasitoide(solt_posi,solt_valor,patch_iniciais,pop_iniciais,l
 				patch_iniciais.append(patch_tempo)
 				pop_iniciais.append([para_lista_inicial[0][solt_posi],0,inicial_n,0])
 				patches_sorteados[0].append(patch_tempo)
-		#pondo segunda cotesia
+		#second cotesia
 		for qual_hectare in lista_patches:
 			for sorteio in range(solt_valor):
 				
@@ -719,7 +718,7 @@ def MEIO_alocando_parasitoide(solt_posi,solt_valor,patch_iniciais,pop_iniciais,l
 				patches_sorteados[0].append(patch_tempo)
 	elif loop==28:
 		patches_sorteados=[[],[]]
-		#pondo tetrastichus:
+		#tetrastichus:
 		for qual_hectare in lista_patches:
 			for sorteio in range(solt_valor):
 				
@@ -730,7 +729,7 @@ def MEIO_alocando_parasitoide(solt_posi,solt_valor,patch_iniciais,pop_iniciais,l
 				patch_iniciais.append(patch_tempo)
 				pop_iniciais.append([0,para_lista_inicial[1][solt_posi],inicial_n,0])
 				patches_sorteados[0].append(patch_tempo)
-		#pondo segunda tetrastichus
+		#second tetrastichus
 		for qual_hectare in lista_patches:
 			for sorteio in range(solt_valor):
 				
@@ -757,7 +756,7 @@ def BORDA_alocando_parasitoide(solt_posi,solt_valor,patch_iniciais,pop_iniciais,
 				patches_sorteados[0].append(patch_tempo)
 	elif loop==21 or loop==25:
 		patches_sorteados=[[],[]]
-		#pondo cotesia:
+		#cotesia:
 		for qual_hectare in lista_borda:
 			for sorteio in range(solt_valor):
 				patch_tempo=random.choice(qual_hectare)
@@ -766,7 +765,7 @@ def BORDA_alocando_parasitoide(solt_posi,solt_valor,patch_iniciais,pop_iniciais,
 				patch_iniciais.append(patch_tempo)
 				pop_iniciais.append([para_lista_inicial[0][solt_posi],0,inicial_n,0])
 				patches_sorteados[0].append(patch_tempo)
-		#pondo tetrastichus
+		#tetrastichus
 		for qual_hectare in lista_borda:
 			for sorteio in range(solt_valor):
 				patch_tempo=random.choice(qual_hectare)
@@ -777,7 +776,7 @@ def BORDA_alocando_parasitoide(solt_posi,solt_valor,patch_iniciais,pop_iniciais,
 				patches_sorteados[1].append(patch_tempo)
 	elif loop==22 or loop==26 or loop==27:
 		patches_sorteados=[[],[]]
-		#pondo cotesia:
+		#cotesia:
 		for qual_hectare in lista_borda:
 			for sorteio in range(solt_valor):
 				
@@ -788,7 +787,7 @@ def BORDA_alocando_parasitoide(solt_posi,solt_valor,patch_iniciais,pop_iniciais,
 				patch_iniciais.append(patch_tempo)
 				pop_iniciais.append([para_lista_inicial[0][solt_posi],0,inicial_n,0])
 				patches_sorteados[0].append(patch_tempo)
-		#pondo segunda cotesia
+		#second cotesia
 		for qual_hectare in lista_borda:
 			for sorteio in range(solt_valor):
 				
@@ -801,7 +800,7 @@ def BORDA_alocando_parasitoide(solt_posi,solt_valor,patch_iniciais,pop_iniciais,
 				patches_sorteados[0].append(patch_tempo)
 	elif loop==28:
 		patches_sorteados=[[],[]]
-		#pondo tetrastichus:
+		#tetrastichus:
 		for qual_hectare in lista_borda:
 			for sorteio in range(solt_valor):
 				
@@ -812,7 +811,7 @@ def BORDA_alocando_parasitoide(solt_posi,solt_valor,patch_iniciais,pop_iniciais,
 				patch_iniciais.append(patch_tempo)
 				pop_iniciais.append([0,para_lista_inicial[1][solt_posi],inicial_n,0])
 				patches_sorteados[0].append(patch_tempo)
-		#pondo segunda tetrastichus
+		#second tetrastichus
 		for qual_hectare in lista_borda:
 			for sorteio in range(solt_valor):
 				
@@ -827,33 +826,27 @@ def BORDA_alocando_parasitoide(solt_posi,solt_valor,patch_iniciais,pop_iniciais,
 	return patch_iniciais,pop_iniciais,patches_sorteados
 def loops_cenarios(loop,viz,lista_patches,lista_borda):
 	#10 hectares:
-	#1 no meio
+	#1 on the middle
 	hec10_1_meio_separados1=[[4,7],[4,32],[14,7],[14,32],[24,7],[24,32],[34,7],[34,32],[44,7],[44,32]]#[[4,7],[4,32],[14,7],[14,32],[24,7],[24,32],[34,7],[34,32],[44,7],[44,32]]
 	hec10_1_meio_separados2=[[4,17],[4,42],[14,17],[14,42],[24,17],[24,42],[34,17],[34,42],[44,17],[44,42]]#[[4,17],[4,42],[14,17],[14,42],[24,17],[24,42],[34,17],[34,42],[44,17],[44,42]]
 
-	#1 na borda
+	#1 on the border
 	hec10_1_borda_separados1=[[0,7],[0,32],[13,0],[13,49],[23,0],[33,0],[23,49],[33,49],[49,7],[49,32]]
 	hec10_1_borda_separados2=[[0,17],[0,42],[17,0],[17,49],[27,0],[37,0],[27,49],[37,49],[49,17],[49,42]]
 
-	#4 na borda
+	#4 on the border
 	hec10_4_borda_separados1=[[2,0],[0,9],[0,19],[7,23],[7,24],[0,33],[0,43],[2,49],[42,0],[49,9],[49,19],[47,23],[47,24],[49,33],[49,43],[42,49],[13,0],[19,0],[10,23],[16,23],[10,24],[16,24],[13,49],[19,49],[23,0],[29,0],[20,23],[26,23],[20,24],[26,24],[23,49],[29,49],[33,0],[39,0],[30,23],[36,23],[30,24],[36,24],[33,49],[39,49]]
 	hec10_4_borda_separados2=[[7,0],[0,4],[0,14],[2,23],[2,24],[0,28],[0,38],[7,49],[47,0],[49,4],[49,14],[42,23],[42,24],[49,28],[49,38],[47,49],[10,0],[16,0],[13,23],[19,23],[13,24],[19,24],[10,49],[16,49],[20,0],[26,0],[23,23],[29,23],[23,24],[29,24],[20,49],[26,49],[30,0],[36,0],[33,23],[39,23],[33,24],[39,24],[30,49],[36,49]]
 
-	#4 no meio:
+	#4 on the middle
 	hec10_4_meio_separados1=[[2,9],[2,19],[7,9],[7,19],[2,34],[2,44],[7,34],[7,44],[12,9],[12,19],[17,9],[17,19],[12,34],[12,44],[17,34],[17,44],[22,9],[22,19],[27,9],[27,19],[22,34],[22,44],[27,34],[27,44],[32,9],[32,19],[37,9],[37,19],[32,34],[32,44],[37,34],[37,44],[42,9],[42,19],[47,9],[47,19],[42,34],[42,44],[47,34],[47,44]]
 	hec10_4_meio_separados2=[[2,4],[2,14],[7,4],[7,14],[2,29],[2,39],[7,29],[7,39],[12,4],[12,14],[17,4],[17,14],[12,29],[12,39],[17,29],[17,39],[22,4],[22,14],[27,4],[27,14],[22,29],[22,39],[27,29],[27,39],[32,4],[32,14],[37,4],[37,14],[32,29],[32,39],[37,29],[37,39],[42,4],[42,14],[47,4],[47,14],[42,29],[42,39],[47,29],[47,39]]
 	
-	#6 no meio
-	#hec10_4_meio_separados1=[[2,2],[7,2],[2,10],[7,10],[2,18],[7,18],[12,2],[17,2],[12,10],[17,10],[12,18],[17,18],[22,2],[27,2],[22,10],[7,10],[22,18],[27,18],[32,2],[37,2],[32,10],[37,10],[32,18],[37,18],[42,2],[47,2],[42,10],[47,10],[42,18],[47,18],[2,27],[7,27],[2,35],[7,35],[2,43],[7,43],[12,27],[17,27],[12,35],[17,35],[12,43],[17,43],[22,27],[27,27],[22,35],[7,35],[22,43],[27,43],[32,27],[37,27],[32,35],[37,35],[32,43],[37,43],[42,27],[47,27],[42,35],[47,35],[42,43],[47,43]]
-	#hec10_4_meio_separados2=[[2,6],[7,6],[2,14],[7,14],[2,22],[7,22],[12,6],[17,6],[12,14],[17,14],[12,22],[17,22],[22,6],[27,6],[22,14],[27,14],[22,22],[27,22],[32,6],[37,6],[32,14],[37,14],[32,22],[37,22],[42,6],[47,6],[42,14],[47,14],[42,22],[47,22],[2,31],[7,31],[2,39],[7,39],[2,47],[7,47],[12,31],[17,31],[12,39],[17,39],[12,47],[17,47],[22,31],[27,31],[22,39],[27,39],[22,47],[27,47],[32,31],[37,31],[32,39],[37,39],[32,47],[37,47],[42,31],[47,31],[42,39],[47,39],[42,47],[47,47]]
-	#4 na borda
-	#hec10_4_borda_separados1=[[1,0],[6,0],[0,2],[0,12],[1,23],[6,23],[1,24],[6,24],[0,27],[0,37],[1,49],[6,49],[48,0],[43,0],[49,2],[49,12],[48,23],[43,23],[48,24],[43,24],[49,27],[49,37],[48,49],[43,49],[11,0],[14,0],[17,0],[12,23],[15,23],[18,23],[12,24],[15,24],[18,24],[11,49],[14,49],[17,49],[21,0],[24,0],[27,0],[22,23],[25,23],[28,23],[22,24],[25,24],[28,24],[21,49],[24,49],[27,49],[31,0],[34,0],[37,0],[32,23],[35,23],[38,23],[32,24],[35,24],[38,24],[31,49],[34,49],[37,49]]
-	#hec10_4_borda_separados2=[[3,0],[8,0],[0,6],[0,18],[3,23],[8,23],[3,24],[8,24],[0,31],[0,43],[3,49],[8,49],[46,0],[41,0],[49,6],[49,18],[46,23],[41,23],[46,24],[41,24],[49,31],[49,43],[46,49],[41,49],[12,0],[15,0],[18,0],[11,23],[14,23],[17,23],[11,24],[14,24],[17,24],[12,49],[15,49],[18,49],[22,0],[25,0],[28,0],[21,23],[24,23],[27,23],[21,24],[24,24],[27,24],[22,49],[25,49],[28,49],[32,0],[35,0],[38,0],[31,23],[34,23],[37,23],[31,24],[34,24],[37,24],[32,49],[35,49],[38,49]]
-
-	#8 no meio
+	#8 on the middle
 	hec10_8_meio_separados1=[[2,1],[7,1],[2,7],[7,7],[2,13],[7,13],[2,19],[7,19],[12,1],[17,1],[12,7],[17,7],[12,13],[17,13],[12,19],[17,19],[22,1],[27,1],[22,7],[27,7],[22,13],[27,13],[22,19],[27,19],[32,1],[37,1],[32,7],[37,7],[32,13],[37,13],[32,19],[37,19],[42,1],[47,1],[42,7],[47,7],[42,13],[47,13],[42,19],[47,19],[2,26],[7,26],[2,32],[7,32],[2,38],[7,38],[2,44],[7,44],[12,26],[17,26],[12,32],[17,32],[12,38],[17,38],[12,44],[17,44],[22,26],[27,26],[22,32],[27,32],[22,38],[27,38],[22,44],[27,44],[32,26],[37,26],[32,32],[37,32],[32,38],[37,38],[32,44],[37,44],[42,26],[47,26],[42,32],[47,32],[42,38],[47,38],[42,44],[47,44]]
 	hec10_8_meio_separados2=[[2,4],[7,4],[2,10],[7,10],[2,16],[7,16],[2,22],[7,22],[12,4],[17,4],[12,10],[17,10],[12,16],[17,16],[12,22],[17,22],[22,4],[27,4],[22,10],[27,10],[22,16],[27,16],[22,22],[27,22],[32,4],[37,4],[32,10],[37,10],[32,16],[37,16],[32,22],[37,22],[42,4],[47,4],[42,10],[47,10],[42,16],[47,16],[42,22],[47,22],[2,29],[7,29],[2,35],[7,35],[2,41],[7,41],[2,47],[7,47],[12,29],[17,29],[12,35],[17,35],[12,41],[17,41],[12,47],[17,47],[22,29],[27,29],[22,35],[27,35],[22,41],[27,41],[22,47],[27,47],[32,29],[37,29],[32,35],[37,35],[32,41],[37,41],[32,47],[37,47],[42,29],[47,29],[42,35],[47,35],[42,41],[47,41],[42,47],[47,47]]
-	#8 na borda
+	
+	#8 on the border
 	hec10_8_borda_separados1=[[1,0],[6,0],[0,2],[0,12],[1,23],[6,23],[0,9],[0,21],[1,24],[6,24],[0,27],[0,37],[1,49],[6,49],[0,34],[0,47],[48,0],[43,0],[49,2],[49,12],[48,23],[43,23],[49,9],[49,21],[48,24],[43,24],[49,27],[49,37],[48,49],[43,49],[49,34],[49,47],[11,0],[14,0],[17,0],[12,23],[15,23],[18,23],[16,0],[13,23],[12,24],[15,24],[18,24],[11,49],[14,49],[17,49],[13,24],[16,49],[21,0],[24,0],[27,0],[22,23],[25,23],[28,23],[26,0],[23,23],[22,24],[25,24],[28,24],[21,49],[24,49],[27,49],[23,24],[26,49],[31,0],[34,0],[37,0],[32,23],[35,23],[38,23],[36,0],[33,23],[32,24],[35,24],[38,24],[31,49],[34,49],[37,49],[33,24],[36,49]]
 	hec10_8_borda_separados2=[[3,0],[8,0],[0,6],[0,18],[3,23],[8,23],[0,4],[0,15],[3,24],[8,24],[0,31],[0,43],[3,49],[8,49],[0,29],[0,40],[46,0],[41,0],[49,6],[49,18],[46,23],[41,23],[49,4],[49,15],[46,24],[41,24],[49,31],[49,43],[46,49],[41,49],[49,29],[49,40],[12,0],[15,0],[18,0],[11,23],[14,23],[17,23],[13,0],[16,23],[11,24],[14,24],[17,24],[12,49],[15,49],[18,49],[16,24],[13,49],[22,0],[25,0],[28,0],[21,23],[24,23],[27,23],[23,0],[26,23],[21,24],[24,24],[27,24],[22,49],[25,49],[28,49],[26,24],[23,49],[32,0],[35,0],[38,0],[31,23],[34,23],[37,23],[33,0],[36,23],[31,24],[34,24],[37,24],[32,49],[35,49],[38,49],[36,24],[33,49]]
 	
@@ -864,26 +857,26 @@ def loops_cenarios(loop,viz,lista_patches,lista_borda):
 	hec10_1_borda=[hec10_1_borda_separados1,hec10_1_borda_separados2]
 	hec10_1_meio=[hec10_1_meio_separados1,hec10_1_meio_separados2]
 	
-	hec10_1=[hec10_1_borda,hec10_1_meio]#sempre primeiro a borda e dps o meio
-	hec10_4=[hec10_4_borda,hec10_4_meio]#sempre primeiro a borda e dps o meio
-	hec10_8=[hec10_8_borda,hec10_8_meio]#sempre primeiro a borda e dps o meio
+	hec10_1=[hec10_1_borda,hec10_1_meio]#first the border then middle
+	hec10_4=[hec10_4_borda,hec10_4_meio]#first the border then middle
+	hec10_8=[hec10_8_borda,hec10_8_meio]#first the border then middle
 	hec10=[hec10_1,hec10_4,hec10_8]
 	hec10_bordas=[hec10_1_borda,hec10_4_borda,hec10_8_borda]
 	##############################
-	####CENARIOS COM LIBERAÇÃO####
+	#####RELEASING SCENARIOS######
 	##############################
-	#liberando 6k cotesia e 7k tetrastichus por hectare
-	if loop==23: #só 6k cotesia
+	#releasing 6000 cotesia and 7k tetrastichus per hectare
+	if loop==23: #Only 6000 cotesia
 		Pnumerico=52.5
 		Q1numerico=30
 		Q2numerico=0
-		replicas=0 #replicas
-		TS=[4,4,0] #esse valor é o que a outra aluna da professora achou
-		TH=[1.46,3.07,0]#esse valor é o que a outra aluna da professora achou
-		a1=0.28 #esse valor é o que a outra aluna da professora achou
-		a2=8.01 #esse valor é o que a outra aluna da professora achou
+		replicas=0 #replicate
+		TS=[4,4,0] 
+		TH=[1.46,3.07,0]
+		a1=0.28 
+		a2=8.01 
 		a3=0
-		lambda1=1.0341#esse é o valor tirado da tese da tabela de vida desse bixo
+		lambda1=1.0341
 		lambda2=0
 		h0=[100,100]
 		H0=[300,300]
@@ -895,18 +888,18 @@ def loops_cenarios(loop,viz,lista_patches,lista_borda):
 		#
 		solturas=[8]
 		wd_original=f'{os.getcwd()}'
-		para_lista_inicial=[[750],[0]]#to-do: acomodar esse novo jeito nos outros loops e na função
+		para_lista_inicial=[[750],[0]]
 		
 		
-		lista_raios=viz[1] #salvando a lista de raios
-		viz=viz[0] #salvando a lista de vizinhos
-		indv_migrante=[[0.9,0.9,0.3,0]]#taxa de qnts parasitoides saem do patch baixa e alta. 
-		porcentagens=[0.15] #ocupacao inicial do host
+		lista_raios=viz[1] #saving radius list
+		viz=viz[0] #saving neighbors list
+		indv_migrante=[[0.9,0.9,0.3,0]] 
+		porcentagens=[0.15] 
 		for solt_posi,solt_valor in enumerate(solturas):
 			for pop_host_ini_porcentagem in porcentagens:
 				porcentagem_popinihost=[pop_host_ini_porcentagem,0]
 				for fracao_indv_migrante in indv_migrante:
-					for borda_meio,hec10_BordaMeio in enumerate(hec10[solt_posi]): #pega borda e meio
+					for borda_meio,hec10_BordaMeio in enumerate(hec10[solt_posi]): 
 						
 						tempo=sorteio_pop_inicial_host(lin,col,porcentagem_popinihost,inicial_h,inicial_n,solt_valor,loop,lista_patches)
 						patch_iniciais=tempo[0]
@@ -939,17 +932,17 @@ def loops_cenarios(loop,viz,lista_patches,lista_borda):
 								break
 							if ocupacao[0][30]>0:
 								replicas+=1		
-	elif loop==24: #ambos parasitoides juntos 6k cotesia e 7k tetrastichus
+	elif loop==24: #Both parasitoids together with 6000 Cotesia and 7000 Tetrastichus
 		Pnumerico=52.5
 		Q1numerico=30
 		Q2numerico=0
-		replicas=0 #replicas
-		TS=[4,4,0] #esse valor é o que a outra aluna da professora achou
-		TH=[1.46,3.07,0]#esse valor é o que a outra aluna da professora achou
-		a1=0.28 #esse valor é o que a outra aluna da professora achou
-		a2=8.01 #esse valor é o que a outra aluna da professora achou
+		replicas=0 #replicate
+		TS=[4,4,0] 
+		TH=[1.46,3.07,0]
+		a1=0.28 
+		a2=8.01 
 		a3=0
-		lambda1=1.0341#esse é o valor tirado da tese da tabela de vida desse bixo
+		lambda1=1.0341
 		lambda2=0
 		h0=[100,100]
 		H0=[300,300]
@@ -961,18 +954,18 @@ def loops_cenarios(loop,viz,lista_patches,lista_borda):
 		#
 		solturas=[8]
 		wd_original=f'{os.getcwd()}'
-		para_lista_inicial=[[750],[875]]#to-do: acomodar esse novo jeito nos outros loops e na função
+		para_lista_inicial=[[750],[875]]
 		
 		
-		lista_raios=viz[1] #salvando a lista de raios
-		viz=viz[0] #salvando a lista de vizinhos
-		indv_migrante=[[0.9,0.9,0.3,0]]#taxa de qnts parasitoides saem do patch baixa e alta. 
-		porcentagens=[0.15] #ocupacao inicial do host
+		lista_raios=viz[1] #saving radius list
+		viz=viz[0] #saving neighbors list
+		indv_migrante=[[0.9,0.9,0.3,0]] 
+		porcentagens=[0.15] 
 		for solt_posi,solt_valor in enumerate(solturas):
 			for pop_host_ini_porcentagem in porcentagens:
 				porcentagem_popinihost=[pop_host_ini_porcentagem,0]
 				for fracao_indv_migrante in indv_migrante:
-					for borda_meio,hec10_BordaMeio in enumerate(hec10[solt_posi]): #pega borda e meio
+					for borda_meio,hec10_BordaMeio in enumerate(hec10[solt_posi]): 
 						
 						tempo=sorteio_pop_inicial_host(lin,col,porcentagem_popinihost,inicial_h,inicial_n,solt_valor,loop,lista_patches)
 						patch_iniciais=tempo[0]
@@ -1005,17 +998,17 @@ def loops_cenarios(loop,viz,lista_patches,lista_borda):
 								break
 							if ocupacao[0][30]>0:
 								replicas+=1
-	elif loop==25: #ambos parasitoides separados 6k cotesia e 7k tetrastichus
+	elif loop==25: #Both parasitoids separated with 6000 Cotesia and 7000 Tetrastichus
 		Pnumerico=52.5
 		Q1numerico=30
 		Q2numerico=0
-		replicas=0 #replicas
-		TS=[4,4,0] #esse valor é o que a outra aluna da professora achou
-		TH=[1.46,3.07,0]#esse valor é o que a outra aluna da professora achou
-		a1=0.28 #esse valor é o que a outra aluna da professora achou
-		a2=8.01 #esse valor é o que a outra aluna da professora achou
+		replicas=0 #replicate
+		TS=[4,4,0] 
+		TH=[1.46,3.07,0]
+		a1=0.28 
+		a2=8.01 
 		a3=0
-		lambda1=1.0341#esse é o valor tirado da tese da tabela de vida desse bixo
+		lambda1=1.0341
 		lambda2=0
 		h0=[100,100]
 		H0=[300,300]
@@ -1027,18 +1020,18 @@ def loops_cenarios(loop,viz,lista_patches,lista_borda):
 		#
 		solturas=[8]
 		wd_original=f'{os.getcwd()}'
-		para_lista_inicial=[[750],[875]]#to-do: acomodar esse novo jeito nos outros loops e na função
+		para_lista_inicial=[[750],[875]]
 		
 		
-		lista_raios=viz[1] #salvando a lista de raios
-		viz=viz[0] #salvando a lista de vizinhos
-		indv_migrante=[[0.9,0.9,0.3,0]]#taxa de qnts parasitoides saem do patch baixa e alta. 
-		porcentagens=[0.15] #ocupacao inicial do host
+		lista_raios=viz[1] #saving radius list
+		viz=viz[0] #saving neighbors list
+		indv_migrante=[[0.9,0.9,0.3,0]] 
+		porcentagens=[0.15] 
 		for solt_posi,solt_valor in enumerate(solturas):
 			for pop_host_ini_porcentagem in porcentagens:
 				porcentagem_popinihost=[pop_host_ini_porcentagem,0]
 				for fracao_indv_migrante in indv_migrante:
-					for borda_meio,hec10_BordaMeio in enumerate(hec10[solt_posi]): #pega borda e meio
+					for borda_meio,hec10_BordaMeio in enumerate(hec10[solt_posi]): 
 						
 						tempo=sorteio_pop_inicial_host(lin,col,porcentagem_popinihost,inicial_h,inicial_n,solt_valor,loop,lista_patches)
 						patch_iniciais=tempo[0]
@@ -1071,17 +1064,17 @@ def loops_cenarios(loop,viz,lista_patches,lista_borda):
 								break
 							if ocupacao[0][30]>0 and ocupacao[1][30]>0:
 								replicas+=1
-	elif loop==26: #só Cotesia no dois pontos ao mesmo tempo com 6k cotesia total
+	elif loop==26: #Only cotesia on both regions at the same time with 6000 Cotesia in total
 		Pnumerico=52.5
 		Q1numerico=30
 		Q2numerico=0
-		replicas=0 #replicas
-		TS=[4,4,0] #esse valor é o que a outra aluna da professora achou
-		TH=[1.46,3.07,0]#esse valor é o que a outra aluna da professora achou
-		a1=0.28 #esse valor é o que a outra aluna da professora achou
-		a2=8.01 #esse valor é o que a outra aluna da professora achou
+		replicas=0 #replicate
+		TS=[4,4,0] 
+		TH=[1.46,3.07,0]
+		a1=0.28 
+		a2=8.01 
 		a3=0
-		lambda1=1.0341#esse é o valor tirado da tese da tabela de vida desse bixo
+		lambda1=1.0341
 		lambda2=0
 		h0=[100,100]
 		H0=[300,300]
@@ -1093,18 +1086,18 @@ def loops_cenarios(loop,viz,lista_patches,lista_borda):
 		#
 		solturas=[8]
 		wd_original=f'{os.getcwd()}'
-		para_lista_inicial=[[375],[0]]#to-do: acomodar esse novo jeito nos outros loops e na função
+		para_lista_inicial=[[375],[0]]
 		
 		
-		lista_raios=viz[1] #salvando a lista de raios
-		viz=viz[0] #salvando a lista de vizinhos
-		indv_migrante=[[0.9,0.9,0.3,0]]#taxa de qnts parasitoides saem do patch baixa e alta. 
-		porcentagens=[0.15] #ocupacao inicial do host
+		lista_raios=viz[1] #saving radius list
+		viz=viz[0] #saving neighbors list
+		indv_migrante=[[0.9,0.9,0.3,0]] 
+		porcentagens=[0.15] 
 		for solt_posi,solt_valor in enumerate(solturas):
 			for pop_host_ini_porcentagem in porcentagens:
 				porcentagem_popinihost=[pop_host_ini_porcentagem,0]
 				for fracao_indv_migrante in indv_migrante:
-					for borda_meio,hec10_BordaMeio in enumerate(hec10[solt_posi]): #pega borda e meio
+					for borda_meio,hec10_BordaMeio in enumerate(hec10[solt_posi]): 
 						
 						tempo=sorteio_pop_inicial_host(lin,col,porcentagem_popinihost,inicial_h,inicial_n,solt_valor,loop,lista_patches)
 						patch_iniciais=tempo[0]
@@ -1137,17 +1130,17 @@ def loops_cenarios(loop,viz,lista_patches,lista_borda):
 								break
 							if ocupacao[0][30]>0:
 								replicas+=1	
-	elif loop==27: #só Cotesia no dois pontos ao mesmo tempo com 13k cotesia total
+	elif loop==27: #Only Cotesia on both regions at the same time with 13000 Cotesia in total
 		Pnumerico=52.5
 		Q1numerico=30
 		Q2numerico=0
-		replicas=0 #replicas
-		TS=[4,4,0] #esse valor é o que a outra aluna da professora achou
-		TH=[1.46,3.07,0]#esse valor é o que a outra aluna da professora achou
-		a1=0.28 #esse valor é o que a outra aluna da professora achou
-		a2=8.01 #esse valor é o que a outra aluna da professora achou
+		replicas=0 #replicate
+		TS=[4,4,0] 
+		TH=[1.46,3.07,0]
+		a1=0.28 
+		a2=8.01 
 		a3=0
-		lambda1=1.0341#esse é o valor tirado da tese da tabela de vida desse bixo
+		lambda1=1.0341
 		lambda2=0
 		h0=[100,100]
 		H0=[300,300]
@@ -1159,18 +1152,18 @@ def loops_cenarios(loop,viz,lista_patches,lista_borda):
 		#
 		solturas=[8]
 		wd_original=f'{os.getcwd()}'
-		para_lista_inicial=[[812.5],[0]]#to-do: acomodar esse novo jeito nos outros loops e na função
+		para_lista_inicial=[[812.5],[0]]
 		
 		
-		lista_raios=viz[1] #salvando a lista de raios
-		viz=viz[0] #salvando a lista de vizinhos
-		indv_migrante=[[0.9,0.9,0.3,0]]#taxa de qnts parasitoides saem do patch baixa e alta. 
-		porcentagens=[0.15] #ocupacao inicial do host
+		lista_raios=viz[1] #saving radius list
+		viz=viz[0] #saving neighbors list
+		indv_migrante=[[0.9,0.9,0.3,0]] 
+		porcentagens=[0.15] 
 		for solt_posi,solt_valor in enumerate(solturas):
 			for pop_host_ini_porcentagem in porcentagens:
 				porcentagem_popinihost=[pop_host_ini_porcentagem,0]
 				for fracao_indv_migrante in indv_migrante:
-					for borda_meio,hec10_BordaMeio in enumerate(hec10[solt_posi]): #pega borda e meio
+					for borda_meio,hec10_BordaMeio in enumerate(hec10[solt_posi]): 
 						
 						tempo=sorteio_pop_inicial_host(lin,col,porcentagem_popinihost,inicial_h,inicial_n,solt_valor,loop,lista_patches)
 						patch_iniciais=tempo[0]
@@ -1203,17 +1196,17 @@ def loops_cenarios(loop,viz,lista_patches,lista_borda):
 								break
 							if ocupacao[0][30]>0:
 								replicas+=1	
-	elif loop==28: #só Tetrastichus no dois pontos ao mesmo tempo com 13k tetrastichus total
+	elif loop==28: #Only Tetrastichus on both regions at the same time with 13000 Tetrastichus in total
 		Pnumerico=52.5
 		Q1numerico=30
 		Q2numerico=0
-		replicas=0 #replicas
-		TS=[4,4,0] #esse valor é o que a outra aluna da professora achou
-		TH=[1.46,3.07,0]#esse valor é o que a outra aluna da professora achou
-		a1=0.28 #esse valor é o que a outra aluna da professora achou
-		a2=8.01 #esse valor é o que a outra aluna da professora achou
+		replicas=0 #replicate
+		TS=[4,4,0] 
+		TH=[1.46,3.07,0]
+		a1=0.28 
+		a2=8.01 
 		a3=0
-		lambda1=1.0341#esse é o valor tirado da tese da tabela de vida desse bixo
+		lambda1=1.0341
 		lambda2=0
 		h0=[100,100]
 		H0=[300,300]
@@ -1225,18 +1218,18 @@ def loops_cenarios(loop,viz,lista_patches,lista_borda):
 		#
 		solturas=[8]
 		wd_original=f'{os.getcwd()}'
-		para_lista_inicial=[[0],[812.5]]#to-do: acomodar esse novo jeito nos outros loops e na função
+		para_lista_inicial=[[0],[812.5]]
 		
 		
-		lista_raios=viz[1] #salvando a lista de raios
-		viz=viz[0] #salvando a lista de vizinhos
-		indv_migrante=[[0.9,0.9,0.3,0]]#taxa de qnts parasitoides saem do patch baixa e alta. 
-		porcentagens=[0.15] #ocupacao inicial do host
+		lista_raios=viz[1] #saving radius list
+		viz=viz[0] #saving neighbors list
+		indv_migrante=[[0.9,0.9,0.3,0]] 
+		porcentagens=[0.15] 
 		for solt_posi,solt_valor in enumerate(solturas):
 			for pop_host_ini_porcentagem in porcentagens:
 				porcentagem_popinihost=[pop_host_ini_porcentagem,0]
 				for fracao_indv_migrante in indv_migrante:
-					for borda_meio,hec10_BordaMeio in enumerate(hec10[solt_posi]): #pega borda e meio
+					for borda_meio,hec10_BordaMeio in enumerate(hec10[solt_posi]): 
 						
 						tempo=sorteio_pop_inicial_host(lin,col,porcentagem_popinihost,inicial_h,inicial_n,solt_valor,loop,lista_patches)
 						patch_iniciais=tempo[0]
